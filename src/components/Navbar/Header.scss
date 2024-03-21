@@ -1,0 +1,82 @@
+.header_container_admin {
+  display: flex;
+  height: 66px;
+  position: fixed;
+  z-index: 3;
+  width: 100vw;
+  padding-left: 245px;
+
+  .grid_container {
+    border-radius: 10px;
+
+    .header-bar {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      padding-left: 20px;
+
+      p {
+        color: #fff;
+        font-size: 17px;
+        text-transform: uppercase;
+        font-family: 'Plus Jakarta Sans';
+      }
+
+      p:hover {
+        color: #fff;
+        cursor: pointer;
+      }
+    }
+
+    .info-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      .search {
+        .MuiInputBase-root {
+          input {
+            color: #fff;
+            padding: 6px 0px 4px 5px;
+          }
+        }
+      }
+
+      .menu-bar {
+        display: flex;
+        gap: 10px;
+        padding: 0px 20px;
+        align-items: center;
+        justify-content: flex-end;
+        width: 100%;
+        max-width: 300px;
+
+        svg {
+          display: flex;
+          cursor: pointer;
+          font-size: 22px;
+          color: #fff;
+        }
+
+        .user-name {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+.custom-paper_admin {
+  top: 45px !important;
+  right: 100px;
+  left: auto !important;
+  overflow: visible;
+  filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.32));
+  margin-top: 1.5rem;
+
+  .MuiAvatar-root {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+}
