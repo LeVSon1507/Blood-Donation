@@ -8,7 +8,7 @@ interface IPersonalProps {}
 
 const Profile = (props: IPersonalProps) => {
    return (
-      <Box sx={{ m: 4 }}>
+      <Box sx={{ m: 4, pb: '180px' }}>
          <Box className='partner_profile'>
             <Box className='box_infor_first'>
                <Box className='avt_image'>
