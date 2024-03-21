@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-export const API_KEY = 'http://localhost:7090/api';
+export const API_KEY = 'https://localhost:7090/api';
 
 const refreshToken = async (resToken, setAccount: any) => {
    try {

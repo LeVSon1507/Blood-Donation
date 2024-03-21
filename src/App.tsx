@@ -1,5 +1,4 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import HomePage from './container/HomePage';
 import News from './container/News';
 import ContactUs from './container/ContactUs';
 import LandingView from './container/LandingView';
@@ -8,6 +7,7 @@ import Footer from './container/LandingView/Footer';
 import Profile from './container/Profile/Profile';
 import About from './container/LandingView/about';
 import QA from './container/QA/QA';
+import HomePage from './container/Home/HomePage';
 
 function App() {
    const renderBaseComponents = (element: React.ReactNode) => {
