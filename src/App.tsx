@@ -1,12 +1,13 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import HomePage from './container/HomePage';
-import QA from './container/QA';
 import News from './container/News';
 import ContactUs from './container/ContactUs';
 import LandingView from './container/LandingView';
 import Navbar from './components/Navbar';
 import Footer from './container/LandingView/Footer';
-import Profile from './container/PersonalInfor/PersonalInfor';
+import Profile from './container/Profile/Profile';
+import About from './container/LandingView/about';
+import QA from './container/QA/QA';
 
 function App() {
    const renderBaseComponents = (element: React.ReactNode) => {
@@ -25,7 +26,15 @@ function App() {
          element: <LandingView />,
       },
       {
+         path: '/about-us',
+         element: renderBaseComponents(<About />),
+      },
+      {
          path: '/login',
+         element: <h1>Login</h1>,
+      },
+      {
+         path: '/register',
          element: <h1>Login</h1>,
       },
       {

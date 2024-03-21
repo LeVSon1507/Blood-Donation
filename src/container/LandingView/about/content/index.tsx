@@ -7,7 +7,7 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import SecurityIcon from '@mui/icons-material/Security';
 
 // image
-import itSupport from 'src/assets/images/it-support-flatline.svg';
+import itSupport from 'src/assets/images/undraw_doctors_p6aq.svg';
 
 // components
 import Paragraph from '../../Paragraph';
@@ -28,7 +28,7 @@ const Content = () => {
          }}
       >
          <Grid item xs={12} sm={12} md={5} component='section'>
-            <Title text={'What we are offering?'} textAlign={'start'} />
+            <Title text={'Những gì chúng tôi cung cấp?'} textAlign={'start'} />
 
             <Typography
                variant='h6'
@@ -38,11 +38,11 @@ const Content = () => {
                   paddingTop: 1,
                }}
             >
-               Diverse Topics and Discussions
+               Đặt lịch hiến máu dễ dàng và an toàn
             </Typography>
 
             <Paragraph
-               text={`Explore a wide array of topics and engage in diverse discussions, connecting with individuals who share your interests and passions.`}
+               text={`Với tính năng tìm kiếm địa điểm hiến máu, bạn có thể dễ dàng tìm ra các điểm hiến máu gần nơi bạn sống hoặc làm việc. Chỉ cần nhập địa chỉ của bạn và chúng tôi sẽ hiển thị các trạm hiến máu trong khu vực của bạn cùng với thông tin về giờ mở cửa và cách thức đăng ký.`}
                maxWidth={'75%'}
                mx={0}
                textAlign={'start'}
@@ -74,7 +74,7 @@ const Content = () => {
                         textTransform: 'capitalize',
                      }}
                   >
-                     Random chat by topic
+                     Cập nhật thông tin hiến máu ngay lập tức
                   </Typography>
                </CardContent>
             </Card>
@@ -105,7 +105,7 @@ const Content = () => {
                         textTransform: 'capitalize',
                      }}
                   >
-                     Real-time chat
+                     An toàn cho user
                   </Typography>
                </CardContent>
             </Card>
@@ -163,7 +163,7 @@ const Content = () => {
                         textTransform: 'capitalize',
                      }}
                   >
-                     Create, edit, delete manage content.
+                     Giao diện tiện lợi, dễ dàng sử dụng.
                   </Typography>
                </CardContent>
             </Card>
@@ -194,7 +194,7 @@ const Content = () => {
                         textTransform: 'capitalize',
                      }}
                   >
-                     Chat with strangers.
+                     Mang lòng tốt của bạn đến với xã hội
                   </Typography>
                </CardContent>
             </Card>
@@ -225,7 +225,7 @@ const Content = () => {
                         textTransform: 'capitalize',
                      }}
                   >
-                     Security
+                     Thông tin bảo mật cao
                   </Typography>
                </CardContent>
             </Card>

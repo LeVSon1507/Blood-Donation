@@ -80,13 +80,13 @@ const Header = () => {
                         backgroundColor: '#343a55',
                      },
                   }}
-                  onClick={() => navigate('/auth')}
+                  onClick={() => navigate('/login')}
                >
                   Đến với chúng tôi
                </Button>
                <Button
                   component={Link}
-                  to={'/about'}
+                  to={'/about-us'}
                   variant='outlined'
                   sx={{
                      px: 4,

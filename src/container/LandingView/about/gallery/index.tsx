@@ -2,66 +2,66 @@ import { useState } from 'react';
 import { Typography, Box, Stack } from '@mui/material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
-import anonymous from 'src/assets/images/gallery/anonymous.png';
-import post from 'src/assets/images/gallery/post.png';
-import wall_post from 'src/assets/images/gallery/wall_post.png';
-import chat from 'src/assets/images/gallery/chat.png';
-import it_support_monochromatic from 'src/assets/images/gallery/it-support-monochromatic.png';
+import one from 'src/assets/images/undraw_blooming_re_2kc4.svg';
+import two from 'src/assets/images/undraw_doctor_kw-5-l.svg';
+import three from 'src/assets/images/undraw_professor_re_mj1s.svg';
+import four from 'src/assets/images/undraw_quick_chat_re_bit5.svg';
+import five from 'src/assets/images/undraw_doctors_p6aq.svg';
 import Title from '../../Title';
 import Paragraph from '../../Paragraph';
 
 const Gallery = () => {
    const [currentIndex, setCurrentIndex] = useState(0);
 
-   // const imageData = [
-   //   {
-   //     alt: 'image1',
-   //     image: anonymous,
-   //   },
-   //   {
-   //     alt: 'image2',
-   //     image: post,
-   //   },
-   //   {
-   //     alt: 'image3',
-   //     image: wall_post,
-   //   },
-   //   {
-   //     alt: 'image4',
-   //     image: chat,
-   //   },
-   //   {
-   //     alt: 'image5',
-   //     image: it_support_monochromatic,
-   //   },
-   // ];
-
    const imageData = [
       {
          alt: 'image1',
-         url: 'https://t3.ftcdn.net/jpg/04/17/61/90/360_F_417619090_iVZEF560PanNYbGrgzcb0P9gYhyXFX2o.jpg',
+         image: one,
       },
       {
          alt: 'image2',
-         url: 'https://images.pexels.com/photos/5411784/pexels-photo-5411784.jpeg?cs=srgb&dl=pexels-andrea-davis-5411784.jpg&fm=jpg',
+         image: two,
       },
       {
          alt: 'image3',
-         url: 'https://images.pexels.com/photos/356809/pexels-photo-356809.jpeg?cs=srgb&dl=pexels-daniel-frank-356809.jpg&fm=jpg',
+         image: three,
       },
       {
          alt: 'image4',
-         url: 'https://images.pexels.com/photos/6267516/pexels-photo-6267516.jpeg?cs=srgb&dl=pexels-get-lost-mike-6267516.jpg&fm=jpg',
+         image: four,
       },
       {
          alt: 'image5',
-         url: 'https://images.pexels.com/photos/667838/pexels-photo-667838.jpeg?cs=srgb&dl=pexels-huseyn-kamaladdin-667838.jpg&fm=jpg',
+         image: five,
       },
    ];
 
+   // const imageData = [
+   //    {
+   //       alt: 'image1',
+   //       url: 'https://t3.ftcdn.net/jpg/04/17/61/90/360_F_417619090_iVZEF560PanNYbGrgzcb0P9gYhyXFX2o.jpg',
+   //    },
+   //    {
+   //       alt: 'image2',
+   //       url: 'https://images.pexels.com/photos/5411784/pexels-photo-5411784.jpeg?cs=srgb&dl=pexels-andrea-davis-5411784.jpg&fm=jpg',
+   //    },
+   //    {
+   //       alt: 'image3',
+   //       url: 'https://images.pexels.com/photos/356809/pexels-photo-356809.jpeg?cs=srgb&dl=pexels-daniel-frank-356809.jpg&fm=jpg',
+   //    },
+   //    {
+   //       alt: 'image4',
+   //       url: 'https://images.pexels.com/photos/6267516/pexels-photo-6267516.jpeg?cs=srgb&dl=pexels-get-lost-mike-6267516.jpg&fm=jpg',
+   //    },
+   //    {
+   //       alt: 'image5',
+   //       url: 'https://images.pexels.com/photos/667838/pexels-photo-667838.jpeg?cs=srgb&dl=pexels-huseyn-kamaladdin-667838.jpg&fm=jpg',
+   //    },
+   // ];
+
    const renderSlides = imageData.map(image => (
       <div key={image.alt}>
-         <img src={image.url} alt={image.alt} />
+         <img src={image.image} alt={image.alt} />
       </div>
    ));
 
@@ -86,7 +86,7 @@ const Gallery = () => {
                paddingBottom: 3,
             }}
          >
-            <Title text={'User Trust and Satisfaction'} textAlign={'center'} />
+            <Title text={'Giới Thiệu Về Hiến Máu:'} textAlign={'center'} />
             <Typography
                variant='h5'
                component='h4'
@@ -95,10 +95,10 @@ const Gallery = () => {
                   paddingTop: 1,
                }}
             >
-               Topic Gallery
+               Gọt máu hồng
             </Typography>
             <Paragraph
-               text={`Become part of a community where thousands of users have expressed their confidence in our dedication to maintaining a secure and interactive platform for anonymous discussions.`}
+               text={`Chào mừng bạn đến với trang web chúng tôi, nơi nâng cao nhận thức và khuyến khích hoạt động hiến máu. Chúng tôi tin rằng việc hiến máu không chỉ là hành động cao cả mà còn là cách giản đơn để cứu sống người khác. Trang web của chúng tôi cung cấp thông tin chi tiết về quy trình hiến máu, lợi ích của việc hiến máu đối với cộng đồng và tất cả những điều bạn cần biết để trở thành một tình nguyện viên hiến máu.`}
                maxWidth={'sm'}
                mx={'auto'}
                textAlign={'center'}

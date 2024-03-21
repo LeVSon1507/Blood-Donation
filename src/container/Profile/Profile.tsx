@@ -1,8 +1,8 @@
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import React from 'react';
-import './PersonalInfor.scss';
-import { url_img } from '../../utils/const';
+import './Profile.scss';
+import { url_img } from 'src/utils/const';
 
 interface IPersonalProps {}
 
