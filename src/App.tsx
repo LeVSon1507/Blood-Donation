@@ -3,10 +3,10 @@ import HomePage from './container/HomePage';
 import QA from './container/QA';
 import News from './container/News';
 import ContactUs from './container/ContactUs';
-import Profile from './container/Profile';
 import LandingView from './container/LandingView';
 import Navbar from './components/Navbar';
 import Footer from './container/LandingView/Footer';
+import Profile from './container/PersonalInfor/PersonalInfor';
 
 function App() {
    const renderBaseComponents = (element: React.ReactNode) => {
