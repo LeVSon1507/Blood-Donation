@@ -5,6 +5,7 @@ import './Profile.scss';
 import { token, url_img } from 'src/utils/const';
 import { API_KEY, User, formatDate } from 'src/utils';
 import axios from 'axios';
+import ErrorPage from 'src/components/ErrorPage';
 
 interface IPersonalProps {}
 
@@ -26,7 +27,7 @@ const Profile = (props: IPersonalProps) => {
    }, []);
 
    return error ? (
-      <>{error}</>
+      <>{<ErrorPage message={error} />}</>
    ) : (
       <Box sx={{ m: 4, pb: '180px' }}>
          <Box className='partner_profile'>

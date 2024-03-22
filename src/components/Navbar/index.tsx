@@ -83,7 +83,7 @@ const Navbar = props => {
    return (
       <AppBar
          component='nav'
-         position={`${isAdmin ? 'fixed' : 'fixed'}`}
+         position={`${isAdmin ? 'fixed' : 'sticky'}`}
          sx={{
             backgroundColor: 'orange',
          }}

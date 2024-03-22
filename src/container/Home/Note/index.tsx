@@ -72,17 +72,16 @@ function Note() {
                         </div>
                         <blockquote className='blockquote blockquote-sm mt-2'>
                            <p className='font-normal mb-5'>
-                              {' '}
-                              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-                              eiusmod tempor incididunt.
+                              Nếu phát hiện chảy máu tại chỗ chích: <br /> - Giơ tay cao.
+                              <br /> - Lấy tay kia ấn nhẹ vào miếng bông hoặc băng dính.
+                              <br /> - Liên hệ nhân viên y tế để được hỗ trợ khi cần thiết.
                            </p>
                            <footer className='blockquote-footer text-uppercase text-white'>
-                              Nicholas{' '}
                               <cite
                                  className='d-block text-capitalize font-size-14 opacity-80 mt-1'
                                  title='Source Title'
                               >
-                                 Donna’s Father
+                                 Bs. PGS Lê Văn Sơn
                               </cite>
                            </footer>
                         </blockquote>
