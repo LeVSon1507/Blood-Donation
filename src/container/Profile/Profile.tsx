@@ -50,7 +50,7 @@ const Profile = (props: IPersonalProps) => {
                            {user?.email || 'Chưa cập nhật'}
                         </Typography>
                         <Typography className='bio'>
-                           <strong> Địa chỉ: </strong>
+                           <strong> Số điện thoại: </strong>
                            {user?.phoneNumber ?? 'Chưa cập nhật'}
                         </Typography>
                         <Typography className='bio'>
@@ -61,10 +61,26 @@ const Profile = (props: IPersonalProps) => {
                   </Box>
                   <Box className='grid_container'></Box>
                   <Box className='action_box'>
-                     Tôi tên là {user?.volunteers?.fullName || 'Vô Danh'} sinh ngày{' '}
-                     {formatDate(user?.volunteers?.birthDate) || 'Chưa cập nhật'} giới tính{' '}
-                     {user?.volunteers?.gender === 0 ? 'nam' : 'nữ'} có cccd số{' '}
-                     {user?.volunteers?.cccd}.
+                     {user?.volunteers?.fullName ? (
+                        <>
+                           <Typography>
+                              Xin chào, tôi là <strong>{user.volunteers.fullName}</strong>!
+                           </Typography>
+                           <Typography>
+                              Tôi sinh ngày{' '}
+                              <strong>
+                                 {formatDate(user.volunteers.birthDate) || 'Chưa cập nhật'}
+                              </strong>
+                              , là một {user.volunteers.gender === 0 ? 'anh chàng' : 'cô gái'} với
+                              số CCCD là <strong>{user.volunteers.cccd || 'Chưa cập nhật'}</strong>.
+                           </Typography>
+                        </>
+                     ) : (
+                        <Typography>
+                           Xin chào! Tôi là một người vô danh, có thể bạn muốn cập nhật thông tin cá
+                           nhân của mình.
+                        </Typography>
+                     )}
                   </Box>
                   <Box className='contact_infor'>
                      <Box className='contact_infor_post'>
