@@ -1,21 +1,25 @@
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import './Profile.scss';
 import { token, url_img } from 'src/utils/const';
 import { API_KEY, User, formatDate } from 'src/utils';
 import axios from 'axios';
 import ErrorPage from 'src/components/ErrorPage';
+import EditProfile from './UpdateProfileModal';
 
 interface IPersonalProps {}
 
 const Profile = (props: IPersonalProps) => {
-   const [user, setUser] = useState<User>(null);
+   const [user, setUser] = useState<User>(localStorage.getItem('currentUser') as unknown as User);
+   const userId = localStorage.getItem('userId');
    const [error, setError] = useState('');
+   const [registerCount, setRegisterCount] = useState('');
+   const [openEdit, setOpenEdit] = useState(false);
 
    useEffect(() => {
       axios
-         .get<{ data: User }>(`${API_KEY}/user/profile?id=26`, {
+         .get<{ data: User }>(`${API_KEY}/user/profile?id=${userId}`, {
             headers: {
                Authorization: `Bearer ${token}`,
             },
@@ -24,7 +28,21 @@ const Profile = (props: IPersonalProps) => {
          .catch(err => {
             setError(err?.message);
          });
-   }, []);
+
+      axios
+         .get<{ data: string }>(
+            `${API_KEY}/volunteer/countblooddonationsessions?volunteerid=${userId}`,
+            {
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+            }
+         )
+         .then(res => setRegisterCount(res?.data?.data))
+         .catch(err => {
+            setError(err?.message);
+         });
+   }, [userId]);
 
    return error ? (
       <>{<ErrorPage message={error} />}</>
@@ -43,7 +61,7 @@ const Profile = (props: IPersonalProps) => {
                   <Box className='bio_box'>
                      <span className='box_name'>
                         <Typography className='user_name'>
-                           Họ và tên: {user?.volunteers?.fullName || 'Chưa cập nhật'}
+                           Họ và tên: {user?.volunteers?.fullname || 'Chưa cập nhật'}
                         </Typography>
                         <Typography className='bio'>
                            <strong> Email: </strong>
@@ -61,13 +79,11 @@ const Profile = (props: IPersonalProps) => {
                   </Box>
                   <Box className='grid_container'></Box>
                   <Box className='action_box'>
-                     {user?.volunteers?.fullName ? (
+                     {user?.volunteers?.fullname ? (
                         <>
                            <Typography>
-                              Xin chào, tôi là <strong>{user.volunteers.fullName}</strong>!
-                           </Typography>
-                           <Typography>
-                              Tôi sinh ngày{' '}
+                              Xin chào, tôi là <strong>{user.volunteers.fullname}</strong>! Tôi sinh
+                              ngày{' '}
                               <strong>
                                  {formatDate(user.volunteers.birthDate) || 'Chưa cập nhật'}
                               </strong>
@@ -84,15 +100,21 @@ const Profile = (props: IPersonalProps) => {
                   </Box>
                   <Box className='contact_infor'>
                      <Box className='contact_infor_post'>
-                        <Typography>Số lần hiến máu:</Typography>
+                        <Typography>Số lần đăng kí hiến máu:</Typography>
                      </Box>
                      <Box className='contact_infor_post'>
-                        <Typography>3</Typography>
+                        <Typography>{registerCount}</Typography>
                      </Box>
+                  </Box>
+                  <Box>
+                     <Button onClick={() => setOpenEdit(true)} sx={{ color: 'green' }}>
+                        Cập nhật thông tin cá nhân
+                     </Button>
                   </Box>
                </Box>
             </Box>
          </Box>
+         <EditProfile isOpen={openEdit} user={user} handleClose={() => setOpenEdit(false)} />
       </Box>
    );
 };

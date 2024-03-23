@@ -11,7 +11,9 @@ export default function DateRangePickerValue({ value, setValue }) {
          <div style={{ backgroundColor: 'white', padding: '20px' }}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                <DemoContainer components={['DateRangePicker', 'DateRangePicker']}>
-                  <Typography variant='subtitle2'>Bạn cần đặt lịch vào thời gian nào?</Typography>
+                  <Typography variant='subtitle2'>
+                     Bạn cần đặt lịch hiến máu vào thời gian nào?
+                  </Typography>
                   <DemoItem component='DateRangePicker'>
                      <DateRangePicker value={value} onChange={newValue => setValue(newValue)} />
                   </DemoItem>

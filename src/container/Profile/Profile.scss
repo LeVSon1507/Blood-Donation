@@ -86,6 +86,8 @@
       flex-direction: column;
       gap: 20px;
       padding: 30px 0px 0px;
+      color: #811315;
+
 
       .about_me {
         position: relative;
@@ -93,7 +95,6 @@
         p:nth-child(1) {
           opacity: 0.15;
           font-family: 'Poppins', sans-serif;
-          color: #811315;
           font-size: 2.5rem;
           text-transform: uppercase;
           line-height: 0.9;
@@ -215,7 +216,7 @@
 
         .contact_infor_post {
           display: flex;
-          gap: 10px;
+          gap: 1px;
           align-items: center;
 
           p:nth-child(1) {
@@ -224,7 +225,7 @@
             -webkit-text-stroke-width: 1.4px;
             -webkit-text-stroke-color: black;
             font-family: 'Roboto Mono', monospace;
-            font-size: 35px;
+            font-size: 30px;
           }
 
           p:nth-child(2) {

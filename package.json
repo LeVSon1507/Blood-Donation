@@ -21,6 +21,7 @@
       "axios": "^1.6.8",
       "bootstrap": "^4.4.1",
       "dayjs": "^1.11.10",
+      "formik": "^2.4.5",
       "framer-motion": "^11.0.18",
       "jwt-decode": "^4.0.0",
       "localforage": "^1.10.0",

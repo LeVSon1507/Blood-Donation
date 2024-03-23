@@ -1,15 +1,24 @@
 import { createContext, useContext, useState } from 'react';
+import { Volunteer } from 'src/utils';
 
 interface User {
-   userId?: string;
+   userId: string;
    img?: string;
-   email?: string;
+   email: string;
    phoneNumber?: string;
    city?: string;
    ward?: string;
    district?: string;
    address?: string;
    role?: string;
+   volunteers: Volunteer;
+   gender?: string;
+   fullname?: string;
+   cccd?: string;
+   birthdate?: string;
+   hospitals?: any;
+   bloodbank?: any;
+   notifications?: any[];
 }
 
 interface AuthContextType {
@@ -37,6 +46,7 @@ const AuthProvider = ({ children }: AuthProviderProviderProps) => {
       district: '',
       address: '',
       role: '',
+      volunteers: null,
    });
 
    const handleSetUser = user => {

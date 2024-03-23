@@ -2,7 +2,7 @@ export interface Volunteer {
    volunteerId: number;
    birthDate: string;
    gender: number;
-   fullName: string | null;
+   fullname: string;
    cccd: string;
    users: null;
    registers: any[];
@@ -10,19 +10,23 @@ export interface Volunteer {
 
 export interface User {
    userId: number;
-   img: string;
-   email: string;
-   password: string;
-   phoneNumber: string;
-   city: string;
-   ward: string;
-   district: string;
-   address: string;
-   role: number;
-   volunteers: Volunteer;
-   hospitals: any;
-   bloodbank: any;
-   notifications: any[];
+   img?: string;
+   email?: string;
+   password?: string;
+   phoneNumber?: string;
+   city?: string;
+   ward?: string;
+   district?: string;
+   address?: string;
+   role?: number;
+   gender?: string;
+   fullname?: string;
+   cccd?: string;
+   birthdate?: string;
+   volunteers?: Volunteer;
+   hospitals?: any;
+   bloodbank?: any;
+   notifications?: any[];
 }
 
 export interface Hospital {

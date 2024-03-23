@@ -117,9 +117,9 @@ function HomePage() {
                   </div>
                )}
 
-               <div className='w-full h-[2px] bg-black mt-6 mb-6'></div>
+               <div className='w-full h-[2px] bg-black mt-6 mb-6' />
                <Standard />
-               <div className='w-full h-[2px] bg-black mb-64'></div>
+               <div className='w-full h-[2px] bg-black mb-64' />
                <Note />
             </>
          )}
