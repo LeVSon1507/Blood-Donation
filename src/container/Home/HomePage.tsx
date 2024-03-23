@@ -13,10 +13,11 @@ import Button from 'src/components/Button';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { CircularProgress, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useAuth } from 'src/context';
 import { ToastError } from 'src/utils/toastOptions';
 import Gallery from '../LandingView/about/gallery';
+import LoadingCommon from 'src/components/LoadingCircle';
 
 function HomePage() {
    const [startEndDate, setStartEndDate] = React.useState<DateRange<Dayjs>>([null, null]);
@@ -75,9 +76,7 @@ function HomePage() {
       <div className='mt-2'>
          {data?.length > 0 ? (
             isLoading ? (
-               <div className='d-flex justify-content-center align-items-center w-full h-[70vh]'>
-                  <CircularProgress color='secondary' size={50} />
-               </div>
+               <LoadingCommon additionalClass='h-[100vh]' />
             ) : (
                <>
                   <div className='d-flex flex-column'>
@@ -114,21 +113,25 @@ function HomePage() {
                <Gallery />
                <div className='w-full h-[2px] bg-black my-6' />
                <DateRangePickerValue setValue={setStartEndDate} value={startEndDate} />
-               {isNotResult && (
-                  <div className='d-flex justify-content-center align-items-center flex-column text-center p-4'>
-                     <Typography
-                        variant='h2'
-                        component='h1'
-                        className='font-bold text-black font-open-sans'
-                     >
-                        {'Không có kết quả phù hợp'}
-                     </Typography>
-                     {!!startEndDate[0] && !!startEndDate[1] && (
-                        <div className='d-flex justify-content-center align-items-center w-full mt-3'>
-                           <Button onClick={() => setStartEndDate([null, null])}>Bỏ lọc</Button>
-                        </div>
-                     )}
-                  </div>
+               {isLoading ? (
+                  <LoadingCommon additionalClass='h-[100vh]' />
+               ) : (
+                  isNotResult && (
+                     <div className='d-flex justify-content-center align-items-center flex-column text-center p-4'>
+                        <Typography
+                           variant='h2'
+                           component='h1'
+                           className='font-bold text-black font-open-sans'
+                        >
+                           {'Không có kết quả phù hợp'}
+                        </Typography>
+                        {!!startEndDate[0] && !!startEndDate[1] && (
+                           <div className='d-flex justify-content-center align-items-center w-full mt-3'>
+                              <Button onClick={() => setStartEndDate([null, null])}>Bỏ lọc</Button>
+                           </div>
+                        )}
+                     </div>
+                  )
                )}
                <div className='w-full h-[2px] bg-black mt-6 mb-6' />
                <Standard />
