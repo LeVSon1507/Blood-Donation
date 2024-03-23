@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Typography, Box, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import one from 'src/assets/images/undraw_blooming_re_2kc4.svg';
@@ -86,17 +86,8 @@ const Gallery = () => {
                paddingBottom: 3,
             }}
          >
-            <Title text={'Giới Thiệu Về Hiến Máu:'} textAlign={'center'} />
-            <Typography
-               variant='h5'
-               component='h4'
-               align='center'
-               sx={{
-                  paddingTop: 1,
-               }}
-            >
-               Gọt máu hồng
-            </Typography>
+            <Title text={'Giọt Máu Hồng'} textAlign={'center'} />
+
             <Paragraph
                text={`Chào mừng bạn đến với trang web chúng tôi, nơi nâng cao nhận thức và khuyến khích hoạt động hiến máu. Chúng tôi tin rằng việc hiến máu không chỉ là hành động cao cả mà còn là cách giản đơn để cứu sống người khác. Trang web của chúng tôi cung cấp thông tin chi tiết về quy trình hiến máu, lợi ích của việc hiến máu đối với cộng đồng và tất cả những điều bạn cần biết để trở thành một tình nguyện viên hiến máu.`}
                maxWidth={'sm'}

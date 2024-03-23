@@ -13,9 +13,10 @@ import Button from 'src/components/Button';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Typography } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import { useAuth } from 'src/context';
 import { ToastError } from 'src/utils/toastOptions';
+import Gallery from '../LandingView/about/gallery';
 
 function HomePage() {
    const [startEndDate, setStartEndDate] = React.useState<DateRange<Dayjs>>([null, null]);
@@ -23,6 +24,7 @@ function HomePage() {
    const [data, setData] = useState<SearchRequest[]>([]);
    const [isSearchInMyCity, setIsSearchInMyCity] = useState(false);
    const { user } = useAuth();
+   const [isLoading, setIsLoading] = useState(false);
 
    const handleSearchInMyCity = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.checked;
@@ -43,6 +45,7 @@ function HomePage() {
          : 'volunteerid=26';
 
    useEffect(() => {
+      setIsLoading(true);
       axios
          .get<{ data: SearchRequest[] }>(
             `${API_KEY}/volunteer/searchrequest?${startDateParam}&${endDateParam}&${
@@ -54,9 +57,13 @@ function HomePage() {
                },
             }
          )
-         .then(res => setData(res?.data?.data))
+         .then(res => {
+            setData(res?.data?.data);
+            setIsLoading(false);
+         })
          .catch(err => {
             setError(err?.message);
+            setIsLoading(false);
          });
    }, [endDateParam, isSearchInMyCity, startDateParam, volunteerIdParam]);
 
@@ -67,37 +74,44 @@ function HomePage() {
    ) : (
       <div className='mt-2'>
          {data?.length > 0 ? (
-            <>
-               <div className='d-flex flex-column'>
-                  <DateRangePickerValue setValue={setStartEndDate} value={startEndDate} />
-                  <div className='d-flex justify-content-center align-items-center'>
-                     <FormGroup className='d-flex justify-content-center align-items-center'>
-                        <FormControlLabel
-                           control={<Checkbox />}
-                           onChange={handleSearchInMyCity}
-                           disabled={isEmpty(user?.city)}
-                           label='Tìm kiếm danh sách hoạt động ở địa phương tôi'
-                        />
-                        {isEmpty(user?.city) && (
-                           <Typography variant='body2' color='error'>
-                              Vui lòng cập nhật địa chỉ của bạn để tìm kiếm tại địa phương!
-                           </Typography>
-                        )}
-                     </FormGroup>
-                  </div>
-                  {!!startEndDate[0] && !!startEndDate[1] && (
-                     <div className='d-flex justify-content-center align-items-center w-full mt-3'>
-                        <Button onClick={() => setStartEndDate([null, null])}>Bỏ lọc</Button>
-                     </div>
-                  )}
+            isLoading ? (
+               <div className='d-flex justify-content-center align-items-center w-full h-[70vh]'>
+                  <CircularProgress color='secondary' size={50} />
                </div>
-               <div className='w-full h-[2px] bg-black my-6' />
-               {data?.map((item: SearchRequest) => {
-                  return <div>{<RequestItem data={item} />}</div>;
-               })}
-            </>
+            ) : (
+               <>
+                  <div className='d-flex flex-column'>
+                     <DateRangePickerValue setValue={setStartEndDate} value={startEndDate} />
+                     <div className='d-flex justify-content-center align-items-center'>
+                        <FormGroup className='d-flex justify-content-center align-items-center'>
+                           <FormControlLabel
+                              control={<Checkbox />}
+                              onChange={handleSearchInMyCity}
+                              disabled={isEmpty(user?.city)}
+                              label='Tìm kiếm danh sách hoạt động ở địa phương tôi'
+                           />
+                           {isEmpty(user?.city) && (
+                              <Typography variant='body2' color='error'>
+                                 Vui lòng cập nhật địa chỉ của bạn để tìm kiếm tại địa phương!
+                              </Typography>
+                           )}
+                        </FormGroup>
+                     </div>
+                     {!!startEndDate[0] && !!startEndDate[1] && (
+                        <div className='d-flex justify-content-center align-items-center w-full mt-3'>
+                           <Button onClick={() => setStartEndDate([null, null])}>Bỏ lọc</Button>
+                        </div>
+                     )}
+                  </div>
+                  <div className='w-full h-[2px] bg-black my-6' />
+                  {data?.map((item: SearchRequest) => {
+                     return <div>{<RequestItem data={item} />}</div>;
+                  })}
+               </>
+            )
          ) : (
             <>
+               <Gallery />
                <div className='w-full h-[2px] bg-black my-6' />
                <DateRangePickerValue setValue={setStartEndDate} value={startEndDate} />
                {isNotResult && (
@@ -116,7 +130,6 @@ function HomePage() {
                      )}
                   </div>
                )}
-
                <div className='w-full h-[2px] bg-black mt-6 mb-6' />
                <Standard />
                <div className='w-full h-[2px] bg-black mb-64' />

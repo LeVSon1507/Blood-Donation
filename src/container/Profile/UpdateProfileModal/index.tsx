@@ -314,7 +314,7 @@ const EditProfile = (props: Props) => {
                      <CardActionArea className='edit-profile-dialog__grid__right__card__action-area'>
                         <CardMedia
                            component='img'
-                           image={user?.img || url_img}
+                           image={url_img}
                            alt='green iguana'
                            className='edit-profile-dialog__grid__right__card__action-area__img'
                         />
