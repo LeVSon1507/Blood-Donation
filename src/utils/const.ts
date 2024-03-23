@@ -5,6 +5,8 @@ import _ from 'lodash';
 export const url_img =
    'https://www.clevelanddentalhc.com/wp-content/uploads/2018/03/sample-avatar.jpg';
 
+export const article_endpoint = `https://newsdata.io/api/1/news?apikey=pub_4058515151c616834f37ed50f02107c4e64cf&country=vi&language=vi&category=health`;
+
 export const token = localStorage.getItem('token');
 
 export const isEmpty = (value: any): boolean =>

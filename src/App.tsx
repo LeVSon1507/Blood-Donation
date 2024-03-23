@@ -1,5 +1,4 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import News from './container/News';
 import LandingView from './container/LandingView';
 import Navbar from './components/Navbar';
 import Footer from './container/LandingView/Footer';
@@ -12,6 +11,7 @@ import RegisterPage from './container/Register';
 import ErrorPage from './components/ErrorPage';
 import ContactUs from './container/ContactUs';
 import { AuthProvider } from './context';
+import News from './container/News';
 
 function App() {
    const renderBaseComponents = (element: React.ReactNode) => {
