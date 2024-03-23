@@ -1,6 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import News from './container/News';
-import ContactUs from './container/ContactUs';
 import LandingView from './container/LandingView';
 import Navbar from './components/Navbar';
 import Footer from './container/LandingView/Footer';
@@ -11,6 +10,7 @@ import HomePage from './container/Home/HomePage';
 import Login from './container/Login';
 import RegisterPage from './container/Register';
 import ErrorPage from './components/ErrorPage';
+import ContactUs from './container/ContactUs';
 
 function App() {
    const renderBaseComponents = (element: React.ReactNode) => {

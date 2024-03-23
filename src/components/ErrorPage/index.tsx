@@ -3,7 +3,7 @@ import errorImg from 'src/assets/images/err.svg';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const ErrorPage = ({ message = 'Opps!!!' }) => {
+const ErrorPage = ({ message = 'Opps!!!', isCheckLogin = false }) => {
    const navigate = useNavigate();
    const CustomBox = styled(Box)(({ theme }) => ({
       minHeight: '80vh',
@@ -44,18 +44,20 @@ const ErrorPage = ({ message = 'Opps!!!' }) => {
                {message}
             </Typography>
 
-            <Typography
-               variant='body1'
-               component='p'
-               sx={{
-                  py: 3,
-                  lineHeight: 1.6,
-                  color: 'black',
-                  fontFamily: 'Open Sans,Arial,sans-serif',
-               }}
-            >
-               Có gì đó không ổn, hãy thử lại nhé!
-            </Typography>
+            {!isCheckLogin && (
+               <Typography
+                  variant='body1'
+                  component='p'
+                  sx={{
+                     py: 3,
+                     lineHeight: 1.6,
+                     color: 'black',
+                     fontFamily: 'Open Sans,Arial,sans-serif',
+                  }}
+               >
+                  Có gì đó không ổn, hãy thử lại nhé!
+               </Typography>
+            )}
 
             <Box>
                <Button
@@ -77,9 +79,9 @@ const ErrorPage = ({ message = 'Opps!!!' }) => {
                         backgroundColor: '#343a55',
                      },
                   }}
-                  onClick={() => navigate('/')}
+                  onClick={isCheckLogin ? () => navigate('/login') : () => navigate('/')}
                >
-                  Thử lại!
+                  {isCheckLogin ? 'Đăng nhập' : 'Thử lại!'}
                </Button>
             </Box>
          </BoxText>

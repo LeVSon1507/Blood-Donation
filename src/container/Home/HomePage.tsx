@@ -14,12 +14,15 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { Typography } from '@mui/material';
+import { useAuth } from 'src/context';
 
 function HomePage() {
    const [startEndDate, setStartEndDate] = React.useState<DateRange<Dayjs>>([null, null]);
    const [error, setError] = useState('');
    const [data, setData] = useState<SearchRequest[]>([]);
    const [isSearchInMyCity, setIsSearchInMyCity] = useState(false);
+   const { user } = useAuth();
+   console.log('🚀 ~ HomePage ~ user:', user);
 
    const handleSearchInMyCity = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.checked;

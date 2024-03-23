@@ -3,6 +3,8 @@ import { jwtDecode } from 'jwt-decode';
 
 export const API_KEY = 'https://localhost:7090/api';
 
+export const RE_CAPTCHA_SITE_KEY = '6LfQ3KUoAAAAAKy7R5K2DCfMEwYQy8_Qso9c5q37';
+
 const refreshToken = async (resToken, setAccount: any) => {
    try {
       const resfreshtoke = {

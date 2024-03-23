@@ -19,6 +19,7 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import logo1 from 'src/assets/images/undraw_doctors_p6aq.svg';
 import { url_img } from '../../utils/const';
+import DialogCommon from '../DialogCommon/DialogCommon';
 
 const StyledToolbar = styled(Toolbar)({
    display: 'flex',
@@ -34,7 +35,7 @@ const ListMenu = styled(List)(({ theme }) => ({
    },
 }));
 
-const itemList = [
+const itemList = (isLogin: boolean) => [
    {
       text: 'Trang Chủ',
       to: '/home',
@@ -52,8 +53,8 @@ const itemList = [
       to: '/contact-us',
    },
    {
-      text: 'Trang cá nhân',
-      to: '/profile',
+      text: !isLogin ? 'Đăng Nhập' : 'Trang cá nhân',
+      to: !isLogin ? '/login' : '/profile',
    },
 ];
 
@@ -63,6 +64,7 @@ const Navbar = props => {
    const { isAdmin } = props || {};
    const navigate = useNavigate();
    const [anchorEl, setAnchorEl] = useState<boolean>(false);
+   const [open, setOpen] = useState<boolean>(false);
 
    const goToLandingPage = () => {
       navigate('/');
@@ -79,6 +81,21 @@ const Navbar = props => {
    //  const onConfirm = () => {
    //     navigate('/auth');
    //  };
+
+   const isLogin = !!localStorage.getItem('token') && !!localStorage.getItem('userId');
+
+   const onLogin = () => {
+      navigate('/login');
+   };
+
+   const onLogout = () => {
+      localStorage.clear();
+      navigate('/login');
+   };
+
+   const handleLoginLogout = () => {
+      isLogin ? setOpen(true) : onLogin();
+   };
 
    return (
       <AppBar
@@ -121,7 +138,7 @@ const Navbar = props => {
             </Box>
             {!isAdmin ? (
                <ListMenu>
-                  {itemList.map(item => {
+                  {itemList(isLogin).map(item => {
                      const { text } = item;
                      return (
                         <Button
@@ -144,6 +161,13 @@ const Navbar = props => {
                         </Button>
                      );
                   })}
+                  {isLogin && <Button onClick={handleLoginLogout}>{'Đăng Xuất'}</Button>}
+                  <DialogCommon
+                     content='Bạn có muốn đăng xuất không?'
+                     onClose={() => setOpen(false)}
+                     open={open}
+                     onConfirm={onLogout}
+                  />
                </ListMenu>
             ) : (
                <Box className='menu-bar'>
