@@ -45,10 +45,10 @@ const itemList = (isLogin: boolean) => [
       to: '/qa',
    },
    // TODO: implement news later
-   {
-      text: 'Tin Tức',
-      to: '/news',
-   },
+   // {
+   //    text: 'Tin Tức',
+   //    to: '/news',
+   // },
    {
       text: 'Liên Hệ',
       to: '/contact-us',
