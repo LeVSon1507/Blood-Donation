@@ -16,6 +16,7 @@ import contactusSVG from 'src/assets/images/undraw_doctor_kw-5-l.svg';
 import './styles.scss';
 import FAQSection from './QAsection';
 import LazyShow from '../LandingView/Animated/LazyShow';
+import { ToastInfo } from 'src/utils/toastOptions';
 
 const ContactUs = () => {
    const [isShowBtnSend, setIsShowBtnSend] = useState(false);
@@ -26,7 +27,9 @@ const ContactUs = () => {
    // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const [selfQA, setSelfQA] = useState([]);
 
-   const handleSubmit = () => {};
+   const handleSubmit = () => {
+      ToastInfo('Chức năng này đang trong quá trình phát triển, xin lỗi vì sự bất tiện này!');
+   };
 
    const onSuccessReCaptcha = () => {
       setIsShowBtnSend(true);

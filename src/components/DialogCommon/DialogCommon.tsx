@@ -1,5 +1,6 @@
 import {
    Button,
+   CircularProgress,
    Dialog,
    DialogActions,
    DialogContent,
@@ -18,6 +19,7 @@ interface DialogProps {
    content: string;
    onClose: () => void;
    onConfirm: () => void;
+   isLoading?: boolean;
 }
 
 const Transition = React.forwardRef(function Transition(props: any, ref) {
@@ -45,6 +47,7 @@ const DialogCommon = (props: DialogProps) => {
          <DialogActions className='dialog-action'>
             <Button onClick={onClose}>Huỷ</Button>
             <Button onClick={onConfirm}>Xác Nhận</Button>
+            {props?.isLoading && <CircularProgress color='secondary' />}
          </DialogActions>
       </Dialog>
    );

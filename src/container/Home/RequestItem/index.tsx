@@ -8,11 +8,15 @@ import img3 from 'src/assets/images/undraw_medical_care_movn.svg';
 import img4 from 'src/assets/images/undraw_medicine_b-1-ol.svg';
 import img5 from 'src/assets/images/undraw_professor_re_mj1s.svg';
 import img6 from 'src/assets/images/undraw_questions_re_1fy7.svg';
-import img7 from 'src/assets/images/undraw_scientist_ft0o.svg';
+import img_heard from 'src/assets/images/undraw_a_whole_year_vnfm.svg';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DialogCommon from 'src/components/DialogCommon/DialogCommon';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import { CircularProgress, LinearProgress, Typography } from '@mui/material';
+
+const NOT_VALID_REGISTER_MESSAGE =
+   'Bạn không đủ điều kiện để đăng kí, đợi một khoảng thời gian sau hoặc liên hệ admin để biết thêm chi tiết!';
 
 function RequestItem({ data }: { data: SearchRequest }) {
    const navigate = useNavigate();
@@ -23,7 +27,6 @@ function RequestItem({ data }: { data: SearchRequest }) {
       4: img4,
       5: img5,
       6: img6,
-      7: img7,
    };
 
    const isLogin =
@@ -32,6 +35,8 @@ function RequestItem({ data }: { data: SearchRequest }) {
       !!localStorage.getItem('currentUser');
 
    const [result, setResult] = useState(null);
+
+   const [isLoading, setIsLoading] = useState<boolean>(false);
 
    useEffect(() => {
       axios
@@ -52,7 +57,7 @@ function RequestItem({ data }: { data: SearchRequest }) {
    const [open, setOpen] = useState<boolean>(false);
 
    const onConfirm = () => {
-      result === 1 ? ToastError('Bạn không đủ điều kiện để đăng kí !') : setOpen(true);
+      result !== 0 ? ToastError(NOT_VALID_REGISTER_MESSAGE) : setOpen(true);
    };
 
    const handleRegister = () => {
@@ -60,6 +65,12 @@ function RequestItem({ data }: { data: SearchRequest }) {
    };
 
    const handleYes = async () => {
+      if (!isLogin) return navigate('/login');
+      if (result !== 0) {
+         return ToastError(NOT_VALID_REGISTER_MESSAGE);
+      }
+
+      setIsLoading(true);
       axios
          .post<{ data: string }>(
             `${API_KEY}/volunteer/register`,
@@ -76,10 +87,13 @@ function RequestItem({ data }: { data: SearchRequest }) {
          .then(res => {
             ToastSuccess('Đăng kí thành công !!!');
             setOpen(false);
+            setIsLoading(false);
+            setResult(null);
          })
          .catch(err => {
             console.log(err?.message);
             ToastError('Đăng kí không thành công !!!');
+            setIsLoading(false);
          });
    };
 
@@ -100,19 +114,19 @@ function RequestItem({ data }: { data: SearchRequest }) {
                               className='btn'
                               data-toggle='dropdown'
                               aria-haspopup='true'
+                              style={{
+                                 color: '#811315',
+                                 border: '1px solid #811315',
+                                 borderRadius: '4px',
+                              }}
                               onClick={e => {
                                  e.stopPropagation();
                                  e.preventDefault();
                                  handleRegister();
                               }}
                               aria-expanded='false'
-                              style={{
-                                 color: '#811315',
-                                 border: '1px solid #811315',
-                                 fontWeight: '500',
-                              }}
                            >
-                              Register
+                              Đăng kí
                            </button>
                         </div>
                      </div>
@@ -125,29 +139,54 @@ function RequestItem({ data }: { data: SearchRequest }) {
                      <div className='card-body no-padding'>
                         <div className='item'>
                            <div className='row'>
-                              <div className='col-2 date-holder text-right'>
-                                 <div className='date'>
-                                    <img
-                                       src={imageRandomMapping[Math.round(Math.random() * 10)]}
-                                       alt='img_hpt'
-                                    />
+                              <div className='col-2 text-right'>
+                                 <div className='text-center d-flex justify-content-center align-items-center'>
+                                    {imageRandomMapping[Math.round(Math.random() * 10)] ? (
+                                       <img
+                                          src={
+                                             imageRandomMapping[Math.floor(Math.random() * 6) + 1]
+                                          }
+                                          alt='img_hpt'
+                                       />
+                                    ) : (
+                                       <div className='d-flex justify-content-center align-items-center'>
+                                          <CircularProgress color='secondary' />
+                                       </div>
+                                    )}
                                  </div>
                               </div>
-                              <div className='col-8 content'>
-                                 <h5>{data?.hospitals?.nameHospital}</h5>
-                                 <p>Địa chỉ: {data?.address}</p>
-                                 <p>
-                                    Thời gian hoạt động: {data?.endtime}
-                                    <div className='icon'>
-                                       <i className='fa fa-clock-o'></i>
-                                    </div>
-                                 </p>
-                                 <p>
-                                    Thời gian hiến máu: {formatDateTime(data?.requestDate)}
-                                    <div className='icon'>
-                                       <i className='fa fa-clock-o'></i>
-                                    </div>
-                                 </p>
+                              <div className='col-8 content row align-items-center'>
+                                 <div className='col-8'>
+                                    <Typography variant='h5' className='mb-3'>
+                                       Tên bệnh viện: {data?.hospitals?.nameHospital}
+                                    </Typography>
+                                    <Typography variant='body1'>
+                                       Địa chỉ: {data?.address}
+                                    </Typography>
+                                    <Typography variant='body1'>
+                                       Thời gian hoạt động: {data?.endtime}
+                                       <div className='icon'>
+                                          <i className='fa fa-clock-o'></i>
+                                       </div>
+                                    </Typography>
+                                    <Typography variant='body1'>
+                                       Thời gian hiến máu: {formatDateTime(data?.requestDate)}
+                                       <div className='icon'>
+                                          <i className='fa fa-clock-o'></i>
+                                       </div>
+                                    </Typography>
+                                 </div>
+                                 <div className='col-4'>
+                                    <Typography variant='body1'>
+                                       Số lượng người đăng kí: {Math.round(data?.total)} / 100%
+                                    </Typography>
+                                    <LinearProgress
+                                       variant='determinate'
+                                       value={data?.total}
+                                       color='secondary'
+                                    />
+                                    <img src={img_heard} alt='img_heard' />
+                                 </div>
                               </div>
                            </div>
                         </div>
@@ -160,6 +199,7 @@ function RequestItem({ data }: { data: SearchRequest }) {
             open={open}
             onClose={() => setOpen(false)}
             onConfirm={handleYes}
+            isLoading={isLoading}
             content='Bạn có muốn đăng kí hiến máu tại bệnh viện này?'
          />
       </div>

@@ -11,6 +11,7 @@ import Login from './container/Login';
 import RegisterPage from './container/Register';
 import ErrorPage from './components/ErrorPage';
 import ContactUs from './container/ContactUs';
+import { AuthProvider } from './context';
 
 function App() {
    const renderBaseComponents = (element: React.ReactNode) => {
@@ -66,7 +67,11 @@ function App() {
       },
    ]);
 
-   return <RouterProvider router={router} />;
+   return (
+      <AuthProvider>
+         <RouterProvider router={router} />
+      </AuthProvider>
+   );
 }
 
 export default App;

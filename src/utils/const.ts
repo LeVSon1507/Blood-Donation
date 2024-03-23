@@ -1,10 +1,22 @@
 //TODO: import image local
+import dayjs from 'dayjs';
 import _ from 'lodash';
 
 export const url_img =
    'https://www.clevelanddentalhc.com/wp-content/uploads/2018/03/sample-avatar.jpg';
 
 export const token = localStorage.getItem('token');
+
+export const isEmpty = (value: any): boolean =>
+   value instanceof Date
+      ? !dayjs(value).isValid()
+      : !value ||
+        value === undefined ||
+        value === null ||
+        Number.isNaN(value) ||
+        (typeof value === 'object' && Object.keys(value).length === 0) ||
+        (typeof value === 'string' && value === '') ||
+        (Array.isArray(value) && value.length === 0);
 
 export const isLogin =
    !_.isEmpty(localStorage.getItem('token')) &&

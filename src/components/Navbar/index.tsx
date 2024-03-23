@@ -44,10 +44,11 @@ const itemList = (isLogin: boolean) => [
       text: 'Hỏi Đáp',
       to: '/qa',
    },
-   {
-      text: 'Tin Tức',
-      to: '/news',
-   },
+   // TODO: implement news later
+   // {
+   //    text: 'Tin Tức',
+   //    to: '/news',
+   // },
    {
       text: 'Liên Hệ',
       to: '/contact-us',
