@@ -1,3 +1,60 @@
+export type QuantitySend = {
+   quantitysendid: number;
+   numberbloodid: number;
+   sendBloodid: number;
+   bloodtypeid: number;
+   quantity: number;
+   sendBlood: string;
+   numberBlood: {
+      numberbloodid: number;
+      quantity: number;
+      quantitySends: string[];
+      quantityTake: string[];
+   };
+   bloodtypes: string;
+};
+
+export type SendBlood = {
+   sendBloodid: number;
+   hospitalid: number;
+   bloodbankid: number;
+   datesend: string;
+   status: number;
+   hospitals: string;
+   bloodbank: string;
+   quantitySends: QuantitySend[];
+};
+
+export type BloodBank = {
+   bloodbankid: number;
+   nameBloodbank: string;
+   users: string;
+   sendBloods: SendBlood[];
+};
+
+export type Hospital = {
+   hospitalid: number;
+   nameHospital: string;
+   bloodbankid: number;
+   bloodbank: BloodBank;
+   requests: {
+      requestid: number;
+      hospitalid: number;
+      requestDate: string;
+      quantity: number;
+      contact: string;
+      starttime: string;
+      endtime: string;
+      city: string;
+      ward: string;
+      district: string;
+      address: string;
+      status: number;
+      hospitals: string;
+      registers: string[];
+   }[];
+};
+
 export interface Volunteer {
    volunteerId: number;
    birthDate: string;
@@ -24,20 +81,9 @@ export interface User {
    cccd?: string;
    birthdate?: string;
    volunteers?: Volunteer;
-   hospitals?: any;
+   hospitals?: Hospital;
    bloodbank?: any;
    notifications?: any[];
-}
-
-export interface Hospital {
-   hospitalid: number;
-   nameHospital: string;
-   bloodbankid: number;
-   bloodbank: null;
-   users: null;
-   requests: any[];
-   sendBloods: any[];
-   takebloods: any[];
 }
 
 export interface SearchRequest {
