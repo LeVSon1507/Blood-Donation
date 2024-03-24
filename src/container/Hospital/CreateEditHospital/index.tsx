@@ -11,6 +11,7 @@ import {
 } from "src/utils";
 import Button from "src/components/Button";
 import { toast } from "react-toastify";
+import { FaArrowLeft } from "react-icons/fa";
 
 const CreateEditHospital: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
@@ -50,16 +51,16 @@ const CreateEditHospital: React.FC = () => {
       .then((res) => {
         toast.success("success");
         setIsAdding(false);
-        reset({
-          nameHospital: "",
-          email: "",
-          password: "",
-          phoneNumber: "",
-          city: "",
-          district: "",
-          address: "",
-          ward: "",
-        });
+        // reset({
+        //   nameHospital: "",
+        //   email: "",
+        //   password: "",
+        //   phoneNumber: "",
+        //   city: "",
+        //   district: "",
+        //   address: "",
+        //   ward: "",
+        // });
       })
       .catch((err) => {
         setIsAdding(false);

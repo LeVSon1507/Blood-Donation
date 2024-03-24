@@ -26,3 +26,18 @@ export const getListWardsByDistrictCode = (districtId: string) => {
       value: item.code.toString(),
     }));
 };
+
+export const getWardByCode = (code: string) => {
+  if (!code) return null;
+  return wards.find((item) => item.code === +code);
+};
+
+export const getDistrictByCode = (code: string) => {
+  if (!code) return null;
+  return districts.find((item) => item.code === +code);
+};
+
+export const getProvinceByCode = (code: string) => {
+  if (!code) return null;
+  return provinces.find((item) => item.code === +code);
+};
