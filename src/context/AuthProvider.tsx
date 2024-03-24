@@ -53,17 +53,6 @@ const AuthProvider = ({ children }: AuthProviderProviderProps) => {
       setUser(user);
    };
 
-   //   useEffect(() => {
-   //     http
-   //       .get("/customers/me")
-   //       .then((res) => {
-   //         setUser(res.data);
-   //       })
-   //       .catch((err) => {
-   //         console.log(err);
-   //       });
-   //   }, []);
-
    return <AuthContext.Provider value={{ user, handleSetUser }}>{children}</AuthContext.Provider>;
 };
 

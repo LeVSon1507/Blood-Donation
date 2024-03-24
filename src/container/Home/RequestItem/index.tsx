@@ -102,6 +102,7 @@ function RequestItem({ data }: { data: SearchRequest }) {
             setOpen(false);
             setIsLoading(false);
             setResult(null);
+            navigate('/home');
          })
          .catch(err => {
             console.log(err?.message);
@@ -162,9 +163,9 @@ function RequestItem({ data }: { data: SearchRequest }) {
                               <div className='col-8 content row align-items-center'>
                                  <div className='col-8'>
                                     <Typography variant='h5' className='mb-3'>
-                                       Tên bệnh viện: {data?.hospitals?.nameHospital}
+                                       Tên địa điểm: {data?.hospitals?.nameHospital}
                                     </Typography>
-                                    <Typography variant='body1'>
+                                    <Typography variant='body1' className='mb-1'>
                                        Địa chỉ: {data?.address}
                                     </Typography>
                                     <Typography variant='body1'>

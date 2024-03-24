@@ -10,10 +10,12 @@ import { Grid, TextField, Typography } from '@mui/material';
 import logo1 from 'src/assets/images/undraw_doctors_p6aq.svg';
 import logo2 from 'src/assets/images/undraw_doctor_kw-5-l.svg';
 import Button from 'src/components/Button';
+import LoadingCommon from 'src/components/LoadingCircle';
 
 const Login: React.FC = () => {
    const navigate = useNavigate();
    const { handleSetUser } = useAuth();
+   const [isLoading, setIsLoading] = React.useState(false);
 
    const {
       handleSubmit,
@@ -29,24 +31,28 @@ const Login: React.FC = () => {
    });
 
    const onSubmit = value => {
+      setIsLoading(true);
       http
          .post('user/login', value)
          .then(res => {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('userId', res.data?.data?.userId);
             localStorage.setItem('currentUser', JSON.stringify(res.data?.data));
-
+            setIsLoading(false);
             handleSetUser(res?.data?.data);
             toast.success('Login successfully');
             navigate('/home');
          })
          .catch(err => {
+            setIsLoading(false);
             console.log('error: ', err?.data?.message);
             toast.error(err?.data?.message || 'Email or password incorrect');
          });
    };
 
-   return (
+   return isLoading ? (
+      <LoadingCommon additionalClass='h-[100vh]' />
+   ) : (
       <div className='minH-[100vh] h-[100vh] w-full flex justify-center items-center bg-grayLight'>
          <div className='w-[70%] h-[90%] shadow-2xl flex flex-row bg-white'>
             <div className='w-[50%] h-[100%] '>
