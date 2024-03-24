@@ -5,7 +5,6 @@ import Footer from "./container/LandingView/Footer";
 import Profile from "./container/Profile/Profile";
 import About from "./container/LandingView/about";
 import QA from "./container/QA/QA";
-import HomePage from "./container/Home";
 import Login from "./container/Login";
 import RegisterPage from "./container/Register";
 import ErrorPage from "./components/ErrorPage";
@@ -15,6 +14,11 @@ import News from "./container/News";
 import ManageLayout from "./components/ManageLayout";
 import CreateEditHospital from "./container/Hospital/CreateEditHospital";
 import CreateEditBloodBank from "./container/CreateEditBloodBank";
+import ListHospital from "./container/Hospital/ListHospital";
+import HomePage from "./container/Home";
+import DetailHospital from "./container/Hospital/DetailHospital";
+import ListRequest from "./container/Request/ListRequest";
+import CreateEditRequest from "./container/Request/CreateEditRequest";
 
 function App() {
   const renderBaseComponents = (element: React.ReactNode) => {
@@ -70,15 +74,27 @@ function App() {
       children: [
         {
           path: "/manage/hospitals",
-          element: <h2>Hospital</h2>,
+          element: <ListHospital />,
+        },
+        {
+          path: "/manage/hospitals/:id",
+          element: <DetailHospital />,
+        },
+        {
+          path: "/manage/blood-bank",
+          element: <CreateEditBloodBank />,
         },
         {
           path: "/manage/create-hospitals",
           element: <CreateEditHospital />,
         },
         {
-          path: "/manage/blood-bank",
-          element: <CreateEditBloodBank />,
+          path: "/manage/requests",
+          element: <ListRequest />,
+        },
+        {
+          path: "/manage/create-requests",
+          element: <CreateEditRequest />,
         },
       ],
     },

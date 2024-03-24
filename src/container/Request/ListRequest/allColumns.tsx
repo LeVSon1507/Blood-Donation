@@ -1,7 +1,12 @@
 import { Typography } from "@mui/material";
 import { MRT_ColumnDef } from "material-react-table";
 import { NavLink } from "react-router-dom";
-import { getDistrictByCode, getProvinceByCode, getWardByCode } from "src/utils";
+import {
+  formatDate,
+  getDistrictByCode,
+  getProvinceByCode,
+  getWardByCode,
+} from "src/utils";
 
 export const allColumns: Array<MRT_ColumnDef<any>> = [
   {
@@ -20,14 +25,29 @@ export const allColumns: Array<MRT_ColumnDef<any>> = [
     },
   },
   {
-    accessorKey: "email",
-    header: "Email",
-    size: 150,
+    accessorKey: "requestDate",
+    header: "Request Date",
+    size: 60,
+    Cell: ({ row }) => {
+      const requestDate = row.original?.requestDate;
+
+      return <Typography>{formatDate(requestDate)}</Typography>;
+    },
   },
   {
-    accessorKey: "phoneNumber",
-    header: "Phone Number",
+    accessorKey: "contact",
+    header: "Contact",
     size: 100,
+  },
+  {
+    accessorKey: "starttime",
+    header: "Start Time",
+    size: 50,
+  },
+  {
+    accessorKey: "endtime",
+    header: "End Time",
+    size: 50,
   },
   {
     accessorKey: "address",
