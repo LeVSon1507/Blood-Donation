@@ -1,13 +1,15 @@
-import React from "react";
-import RegisterSection from "./RegisterSection";
+import React from 'react';
+import RegisterSection from './RegisterSection';
+import DetailSection from './DetailSection';
 
 const DetailHospital: React.FC = () => {
-  return (
-    <div className="w-full px-8 pt-6">
-      <h2>Hospital - </h2>
-      <RegisterSection />
-    </div>
-  );
+   return (
+      <div className='w-full px-8 pt-6'>
+         <h2>Hospital - </h2>
+         <DetailSection />
+         <RegisterSection />
+      </div>
+   );
 };
 
 export default DetailHospital;

@@ -4,32 +4,43 @@ import { HiOutlineUsers } from 'react-icons/hi';
 import { MdOutlineBusinessCenter } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from 'src/context';
-
-const items = [
-   {
-      icon: <MdOutlineMapsHomeWork />,
-      title: 'Hospitals',
-      path: '/manage/hospitals',
-   },
-   {
-      icon: <HiOutlineUsers />,
-      title: 'Blood Bank',
-      path: '/manage/blood-bank',
-   },
-   {
-      icon: <MdOutlineBusinessCenter />,
-      title: 'Request',
-      path: '/manage/requests',
-   },
-];
+import { Role, User } from 'src/utils';
 
 const Sidebar = () => {
+   const currentUser = JSON.parse(localStorage.getItem('currentUser')) as unknown as User;
+   const isAdmin = currentUser?.role === Role.Admin;
+   const isHospital = currentUser?.role === Role.Hospital;
+   const isManager = currentUser?.role === Role.BloodBank;
+
+   const items = [
+      {
+         icon: <MdOutlineMapsHomeWork />,
+         title: 'Bệnh Viện',
+         path: isHospital ? `/manage/hospitals/${currentUser?.userId}` : '/manage/hospitals',
+         isDisplay: isManager || isHospital || isAdmin,
+      },
+      {
+         icon: <HiOutlineUsers />,
+         title: 'Ngân hàng máu',
+         path: '/manage/blood-bank',
+         isDisplay: isAdmin,
+      },
+      {
+         icon: <MdOutlineBusinessCenter />,
+         title: 'Yêu cầu',
+         path: '/manage/requests',
+         isDisplay: isAdmin || isManager || isHospital,
+      },
+   ];
+
+   const itemsValid = items?.filter(item => item?.isDisplay);
+
    const { user } = useAuth();
 
    return (
       <div className='w-[300px] h-full shadow-lg flex flex-col pt-5  items-center  text-slate-500 bg-white'>
          <div className='flex flex-col w-full items-center mt-10'>
-            {items.map(item => {
+            {itemsValid.map(item => {
                return (
                   <NavLink
                      to={item.path}

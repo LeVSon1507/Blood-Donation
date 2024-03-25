@@ -1,25 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { Volunteer } from 'src/utils';
-
-interface User {
-   userId: string;
-   img?: string;
-   email: string;
-   phoneNumber?: string;
-   city?: string;
-   ward?: string;
-   district?: string;
-   address?: string;
-   role?: string;
-   volunteers: Volunteer;
-   gender?: string;
-   fullname?: string;
-   cccd?: string;
-   birthdate?: string;
-   hospitals?: any;
-   bloodbank?: any;
-   notifications?: any[];
-}
+import { User } from 'src/utils';
 
 interface AuthContextType {
    user: User;
@@ -37,15 +17,15 @@ const AuthContext: React.Context<AuthContextType> = createContext<AuthContextTyp
 
 const AuthProvider = ({ children }: AuthProviderProviderProps) => {
    const [user, setUser] = useState<User>({
-      userId: '',
+      userId: null,
       img: '',
       email: '',
       phoneNumber: '',
-      city: '',
-      ward: '',
-      district: '',
+      city: null,
+      ward: null,
+      district: null,
       address: '',
-      role: '',
+      role: null,
       volunteers: null,
    });
 

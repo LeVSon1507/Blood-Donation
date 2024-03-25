@@ -2,47 +2,40 @@ import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import './Profile.scss';
-import { token, url_img } from 'src/utils/const';
-import { API_KEY, User, formatDate } from 'src/utils';
-import axios from 'axios';
+import { PRIMARY_COLOR } from 'src/utils/const';
+import {
+   Role,
+   User,
+   formatDate,
+   getDistrictByCode,
+   getProvinceByCode,
+   getWardByCode,
+   http,
+} from 'src/utils';
 import ErrorPage from 'src/components/ErrorPage';
 import EditProfile from './UpdateProfileModal';
+import ava_default from 'src/assets/images/undraw_medicine_b-1-ol.svg';
 
 interface IPersonalProps {}
 
 const Profile = (props: IPersonalProps) => {
-   const [user, setUser] = useState<User>(localStorage.getItem('currentUser') as unknown as User);
-   const userId = localStorage.getItem('userId');
    const [error, setError] = useState('');
    const [registerCount, setRegisterCount] = useState('');
    const [openEdit, setOpenEdit] = useState(false);
+   const currentUser = JSON.parse(localStorage.getItem('currentUser')) as unknown as User;
 
    useEffect(() => {
-      axios
-         .get<{ data: User }>(`${API_KEY}/user/profile?id=${userId}`, {
-            headers: {
-               Authorization: `Bearer ${token}`,
-            },
-         })
-         .then(res => setUser(res?.data?.data))
-         .catch(err => {
-            setError(err?.message);
-         });
-
-      axios
-         .get<{ data: string }>(
-            `${API_KEY}/volunteer/countblooddonationsessions?volunteerid=${userId}`,
-            {
-               headers: {
-                  Authorization: `Bearer ${token}`,
-               },
-            }
-         )
+      http
+         .get(`/volunteer/countblooddonationsessions?volunteerid=${currentUser?.userId}`)
          .then(res => setRegisterCount(res?.data?.data))
          .catch(err => {
             setError(err?.message);
          });
-   }, [userId]);
+   }, [currentUser?.userId]);
+
+   const city = getProvinceByCode(currentUser?.city?.toString())?.name;
+   const ward = getWardByCode(currentUser?.ward?.toString())?.name;
+   const district = getDistrictByCode(currentUser?.district?.toString())?.name;
 
    return error ? (
       <>{<ErrorPage message={error} />}</>
@@ -51,7 +44,14 @@ const Profile = (props: IPersonalProps) => {
          <Box className='partner_profile'>
             <Box className='box_infor_first'>
                <Box className='avt_image'>
-                  <img src={user?.img ?? url_img} alt='avt' loading='lazy' />
+                  <img
+                     src={ava_default}
+                     width={300}
+                     height={300}
+                     style={{ borderRadius: '50%' }}
+                     alt='avt'
+                     loading='lazy'
+                  />
                   <FiberManualRecordTwoTone className='online' />
                </Box>
                <Box className='info_user'>
@@ -61,60 +61,91 @@ const Profile = (props: IPersonalProps) => {
                   <Box className='bio_box'>
                      <span className='box_name'>
                         <Typography className='user_name'>
-                           Họ và tên: {user?.volunteers?.fullname || 'Chưa cập nhật'}
+                           Họ và tên: {currentUser?.fullname || 'Chưa cập nhật'}
                         </Typography>
                         <Typography className='bio'>
                            <strong> Email: </strong>
-                           {user?.email || 'Chưa cập nhật'}
+                           {currentUser?.email || 'Chưa cập nhật'}
                         </Typography>
                         <Typography className='bio'>
                            <strong> Số điện thoại: </strong>
-                           {user?.phoneNumber ?? 'Chưa cập nhật'}
+                           {currentUser?.phoneNumber ?? 'Chưa cập nhật'}
+                        </Typography>
+                        {currentUser?.role === Role.Volunteer && (
+                           <Typography className='bio'>
+                              <strong> Giới tính: </strong>
+                              {currentUser?.gender === 0 ? 'Nam' : 'Nữ' ?? 'Chưa cập nhật'}
+                           </Typography>
+                        )}
+                        <Typography className='bio'>
+                           <strong> Thành phố: </strong>
+                           {city ?? 'Chưa cập nhật'}
                         </Typography>
                         <Typography className='bio'>
-                           <strong> Giới tính:</strong>
-                           {user?.volunteers?.gender === 0 ? ' nam' : ' nữ' ?? 'Chưa cập nhật'}
+                           <strong> Quận: </strong>
+                           {district ?? 'Chưa cập nhật'}
+                        </Typography>
+                        <Typography className='bio'>
+                           <strong> Huyện: </strong>
+                           {ward ?? 'Chưa cập nhật'}
                         </Typography>
                      </span>
                   </Box>
                   <Box className='grid_container'></Box>
                   <Box className='action_box'>
-                     {user?.volunteers?.fullname ? (
+                     {currentUser?.fullname && currentUser?.role === Role.Volunteer ? (
                         <>
                            <Typography>
-                              Xin chào, tôi là <strong>{user.volunteers.fullname}</strong>! Tôi sinh
-                              ngày{' '}
+                              Xin chào, Đây là trang cá nhân của{' '}
+                              <strong>{currentUser.fullname}</strong>! Tôi sinh ngày{' '}
                               <strong>
-                                 {formatDate(user.volunteers.birthDate) || 'Chưa cập nhật'}
+                                 {formatDate(currentUser?.birthdate) || 'Chưa cập nhật'}
                               </strong>
-                              , là một {user.volunteers.gender === 0 ? 'anh chàng' : 'cô gái'} với
-                              số CCCD là <strong>{user.volunteers.cccd || 'Chưa cập nhật'}</strong>.
+                              , là một {currentUser?.gender === 0 ? 'anh chàng' : 'cô gái'} với số
+                              CCCD là <strong>{currentUser.cccd || 'Chưa cập nhật'}</strong>.
                            </Typography>
                         </>
                      ) : (
-                        <Typography>
-                           Xin chào! Tôi là một người vô danh, có thể bạn muốn cập nhật thông tin cá
-                           nhân của mình.
-                        </Typography>
+                        currentUser?.role === Role.Volunteer && (
+                           <Typography>
+                              Xin chào! Đây là trang cá nhân của một người vô danh, có thể người đó
+                              muốn cập nhật thông tin cá nhân của mình.
+                           </Typography>
+                        )
+                     )}
+                     {currentUser?.role === Role.Hospital && (
+                        <Typography>Xin chào! Đây là tài khoản của bệnh viện!</Typography>
+                     )}
+                     {currentUser?.role === Role.Admin && (
+                        <Typography>Xin chào! Đây là tài khoản của Admin!</Typography>
+                     )}
+                     {currentUser?.role === Role.BloodBank && (
+                        <Typography>Xin chào! Đây là tài khoản của Ngân Hàng Máu!</Typography>
                      )}
                   </Box>
-                  <Box className='contact_infor'>
-                     <Box className='contact_infor_post'>
-                        <Typography>Số lần đăng kí hiến máu:</Typography>
+                  {currentUser?.role === Role.Volunteer && (
+                     <Box className='contact_infor'>
+                        <Box className='contact_infor_post'>
+                           <Typography>Số lần đăng kí hiến máu:</Typography>
+                        </Box>
+                        <Box className='contact_infor_post'>
+                           <Typography>{registerCount}</Typography>
+                        </Box>
                      </Box>
-                     <Box className='contact_infor_post'>
-                        <Typography>{registerCount}</Typography>
-                     </Box>
-                  </Box>
-                  <Box>
-                     <Button onClick={() => setOpenEdit(true)} sx={{ color: 'green' }}>
+                  )}
+                  <>
+                     <Button
+                        variant='outlined'
+                        onClick={() => setOpenEdit(true)}
+                        sx={{ color: PRIMARY_COLOR, border: '1px solid #811315' }}
+                     >
                         Cập nhật thông tin cá nhân
                      </Button>
-                  </Box>
+                  </>
                </Box>
             </Box>
          </Box>
-         <EditProfile isOpen={openEdit} user={user} handleClose={() => setOpenEdit(false)} />
+         <EditProfile isOpen={openEdit} handleClose={() => setOpenEdit(false)} user={currentUser} />
       </Box>
    );
 };

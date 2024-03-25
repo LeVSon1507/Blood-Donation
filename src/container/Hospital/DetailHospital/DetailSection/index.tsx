@@ -13,9 +13,10 @@ import {
 } from 'src/utils';
 import LoadingCommon from 'src/components/LoadingCircle';
 import { Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
 function DetailSection({ hospitalId }: { hospitalId?: string }) {
-   const currentId = hospitalId || localStorage.getItem('userId');
+   const { id } = useParams();
 
    const [isLoading, setIsLoading] = useState(false);
    const [hospital, setHospital] = useState<User>();
@@ -23,7 +24,7 @@ function DetailSection({ hospitalId }: { hospitalId?: string }) {
    useEffect(() => {
       setIsLoading(true);
       http
-         .get(`/user/profile?id=${currentId}`)
+         .get(`/user/profile?id=${id}`)
          .then(res => {
             setIsLoading(false);
             setHospital(res?.data?.data);
@@ -32,7 +33,7 @@ function DetailSection({ hospitalId }: { hospitalId?: string }) {
             setIsLoading(false);
             console.log('error: ', err?.data?.message);
          });
-   }, [currentId]);
+   }, [id]);
 
    return isLoading ? (
       <LoadingCommon additionalClass='w-[100vh]' />

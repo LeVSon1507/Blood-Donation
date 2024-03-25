@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from 'src/context';
 import { schema } from './helpers';
-import { http } from 'src/utils';
+import { Role, User, http } from 'src/utils';
 import { Grid, TextField, Typography } from '@mui/material';
 import logo1 from 'src/assets/images/undraw_doctors_p6aq.svg';
 import logo2 from 'src/assets/images/undraw_doctor_kw-5-l.svg';
@@ -16,6 +16,26 @@ const Login: React.FC = () => {
    const navigate = useNavigate();
    const { handleSetUser } = useAuth();
    const [isLoading, setIsLoading] = React.useState(false);
+
+   const handleCheckNavigateByAccountRole = (user: User) => {
+      const isAdmin = user?.role === Role.Admin;
+      const isHospital = user?.role === Role.Hospital;
+      const isManager = user?.role === Role.BloodBank;
+      const isUser = user?.role === Role.Volunteer;
+
+      if (isAdmin) {
+         navigate('/manage/blood-bank');
+      }
+      if (isHospital) {
+         navigate(`/manage/hospitals/${user?.userId}`);
+      }
+      if (isManager) {
+         navigate('/manage/blood-bank');
+      }
+      if (isUser) {
+         navigate('/home');
+      }
+   };
 
    const {
       handleSubmit,
@@ -40,8 +60,11 @@ const Login: React.FC = () => {
             localStorage.setItem('currentUser', JSON.stringify(res.data?.data));
             setIsLoading(false);
             handleSetUser(res?.data?.data);
+            return res?.data?.data;
+         })
+         .then(user => {
             toast.success('Login successfully');
-            navigate('/home');
+            handleCheckNavigateByAccountRole(user);
          })
          .catch(err => {
             setIsLoading(false);

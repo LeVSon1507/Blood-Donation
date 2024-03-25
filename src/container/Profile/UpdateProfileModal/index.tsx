@@ -9,15 +9,27 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import './styles.scss';
-import { API_KEY, User, token, url_img } from 'src/utils';
 import {
+   PRIMARY_COLOR,
+   Role,
+   User,
+   getAllProvinces,
+   getDistrictByCode,
+   getListDistrictsByProvinceCode,
+   getListWardsByDistrictCode,
+   getProvinceByCode,
+   getWardByCode,
+   http,
+   url_img,
+} from 'src/utils';
+import {
+   Autocomplete,
    Card,
    CardActionArea,
    CardContent,
    CardMedia,
    DialogActions,
    DialogContent,
-   DialogContentText,
    FormControl,
    FormHelperText,
    Grid,
@@ -28,15 +40,18 @@ import {
 } from '@mui/material';
 import { FormikProps, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ToastError, ToastInfo, ToastSuccess } from 'src/utils/toastOptions';
+import { ToastSuccess } from 'src/utils/toastOptions';
 import './styles.scss';
-import axios from 'axios';
 import DialogCommon from 'src/components/DialogCommon/DialogCommon';
+import ava_default from 'src/assets/images/undraw_medicine_b-1-ol.svg';
 
 const validationSchema = Yup.object({
    email: Yup.string().nullable().required('Email là bắt buộc'),
    fullname: Yup.string().nullable().required('Họ và tên là bắt buộc'),
    cccd: Yup.string().nullable().required('CCCD là bắt buộc'),
+   phoneNumber: Yup.string().nullable().required('SĐT là bắt buộc'),
+   city: Yup.string().nullable().required('Thành phố là bắt buộc'),
+   address: Yup.string().nullable().required('Địa chỉ là bắt buộc'),
 });
 
 interface Props {
@@ -57,55 +72,56 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const EditProfile = (props: Props) => {
-   const { isOpen, handleClose, user, setUserInfor } = props;
+   const { isOpen, handleClose, user } = props;
    const [isConfirm, setIsConfirm] = React.useState<boolean>(false);
-
-   const formRef = React.useRef<FormikProps<any>>(null);
+   const currentUser = user || (JSON.parse(localStorage.getItem('currentUser')) as unknown as User);
+   const formRef = React.useRef<FormikProps<User>>(null);
 
    const handleUpdateProfile = () => {
-      return ToastInfo(
-         'Chức năng không đang trong quá trình phát triển, xin lỗi vì sự bất tiên này!'
-      );
       const updateData = values;
 
-      axios
-         .put<{ data: User }>(`${API_KEY}/user/updateProfileVolunteer`, updateData, {
-            headers: {
-               Authorization: `Bearer ${token}`,
-            },
-         })
+      http
+         .put(`/user/updateProfileVolunteer`, updateData)
          .then(res => {
             ToastSuccess('Update Profile Successfully');
             handleClose();
-            setUserInfor(res.data.data);
+            localStorage.setItem('currentUser', JSON.stringify(updateData));
+            window.location.reload();
          })
          .catch(err => {
             console.log(err?.message);
-            ToastError('Update Profile Fail!');
          });
    };
 
+   const city = getProvinceByCode(currentUser?.city?.toString());
+   const ward = getWardByCode(currentUser?.ward?.toString());
+   const district = getDistrictByCode(currentUser?.district?.toString());
+
    const formik = useFormik({
       initialValues: {
-         userId: user?.userId,
-         img: user?.img,
-         email: user?.email,
-         phoneNumber: user?.phoneNumber,
-         city: user?.city,
-         ward: user?.ward,
-         district: user?.district,
-         address: user?.address,
-         birthdate: user?.volunteers?.birthDate,
-         gender: user?.volunteers?.gender,
-         fullname: user?.volunteers?.fullname,
-         cccd: user?.volunteers?.cccd,
+         userId: currentUser?.userId,
+         img: currentUser?.img ?? url_img,
+         email: currentUser?.email,
+         phoneNumber: currentUser?.phoneNumber,
+         city: city?.code,
+         ward: ward?.code,
+         district: district?.code,
+         role: currentUser?.role,
+         address: currentUser?.address,
+         birthdate: currentUser?.birthdate,
+         gender: currentUser?.gender,
+         fullname: currentUser?.fullname,
+         cccd: currentUser?.cccd,
       },
       validationSchema,
       innerRef: formRef,
       onSubmit: () => setIsConfirm(true),
    });
 
-   const { errors, touched, getFieldProps, dirty, values } = formik;
+   const { errors, touched, getFieldProps, setFieldValue, dirty, values } = formik;
+
+   const [listDistricts, setListDistricts] = React.useState([]);
+   const [listWards, setListWards] = React.useState([]);
 
    return (
       <React.Fragment>
@@ -126,33 +142,29 @@ const EditProfile = (props: Props) => {
                      variant='h6'
                      component='div'
                   >
-                     Edit General Information
+                     Cập nhật thông tin cá nhân
                   </Typography>
                </Toolbar>
             </AppBar>
             <Grid container className='edit-profile-dialog__grid'>
                <Grid item xs={8} className='edit-profile-dialog__grid__left'>
                   <DialogContent className='edit-profile-dialog__grid__left__dialog'>
-                     <DialogContentText className='post-label'>
-                        Edit User Profile:
-                     </DialogContentText>
-
                      <TextField
                         autoFocus
                         margin='dense'
                         id='Full Name'
                         className='edit-profile-dialog__grid__left__dialog__input'
                         {...getFieldProps('fullname')}
-                        label='Họ và tên'
+                        label='Tên Của Bạn'
                         type='text'
                         fullWidth
                         required
                         variant='outlined'
-                        error={touched.fullName && Boolean(errors.fullName)}
+                        error={touched.fullname && Boolean(errors.fullname)}
                         helperText={
-                           touched.fullName && errors.fullName ? (
+                           touched.fullname && errors.fullname ? (
                               <Typography variant='caption' color='error'>
-                                 {errors.fullName as string}
+                                 {errors.fullname as string}
                               </Typography>
                            ) : null
                         }
@@ -181,10 +193,10 @@ const EditProfile = (props: Props) => {
                      />
 
                      <TextField
-                        autoFocus
                         margin='dense'
                         id='cccd'
                         {...getFieldProps('cccd')}
+                        required
                         className='edit-profile-dialog__grid__left__dialog__input'
                         label='Số Căn Cước Công Dân'
                         type='text'
@@ -203,6 +215,7 @@ const EditProfile = (props: Props) => {
                      <TextField
                         autoFocus
                         margin='dense'
+                        required
                         id='phoneNumber'
                         {...getFieldProps('phoneNumber')}
                         label='Số điện thoại'
@@ -220,91 +233,139 @@ const EditProfile = (props: Props) => {
                         }
                      />
 
-                     <TextField
-                        id='birthdate'
-                        type='date'
-                        label='Ngày sinh'
-                        {...getFieldProps('birthdate')}
-                        InputLabelProps={{
-                           shrink: true,
-                           htmlFor: 'birthdate',
-                        }}
-                        inputProps={{
-                           ...getFieldProps('birthdate'),
-                           max: new Date().toISOString().split('T')[0],
-                        }}
-                        error={touched.birthdate && Boolean(errors.birthdate)}
-                        helperText={
-                           touched.birthdate && errors.birthdate ? (
-                              <Typography variant='caption' color='error'>
-                                 {errors.birthdate as string}
-                              </Typography>
-                           ) : null
-                        }
-                        className='edit-profile-dialog__grid__left__dialog__input-date'
-                     />
+                     {currentUser?.role === Role.Volunteer && (
+                        <TextField
+                           id='birthdate'
+                           type='date'
+                           label='Ngày sinh'
+                           {...getFieldProps('birthdate')}
+                           InputLabelProps={{
+                              shrink: true,
+                              htmlFor: 'birthdate',
+                           }}
+                           inputProps={{
+                              ...getFieldProps('birthdate'),
+                              max: new Date().toISOString().split('T')[0],
+                           }}
+                           error={touched.birthdate && Boolean(errors.birthdate)}
+                           helperText={
+                              touched.birthdate && errors.birthdate ? (
+                                 <Typography variant='caption' color='error'>
+                                    {errors.birthdate as string}
+                                 </Typography>
+                              ) : null
+                           }
+                           className='edit-profile-dialog__grid__left__dialog__input-date'
+                        />
+                     )}
 
-                     <TextField
-                        autoFocus
-                        margin='dense'
-                        className='edit-profile-dialog__grid__left__dialog__input'
-                        id='city'
-                        {...getFieldProps('city')}
-                        label='Thành Phố'
-                        type='text'
-                        fullWidth
-                        variant='outlined'
-                        error={touched.city && Boolean(errors.city)}
-                        helperText={
-                           touched.city && errors.city ? (
-                              <Typography variant='caption' color='error'>
-                                 {errors.city as string}
-                              </Typography>
-                           ) : null
-                        }
-                     />
+                     <Grid xs={12} mb={2} gap={1}>
+                        {currentUser?.role === Role.Volunteer && (
+                           <FormControl
+                              fullWidth
+                              variant='outlined'
+                              className='edit-profile-dialog__grid__left__dialog__input'
+                              error={touched.gender && Boolean(errors.gender)}
+                           >
+                              <InputLabel htmlFor='gender'>Giới tính</InputLabel>
+                              <Select id='gender' {...getFieldProps('gender')} label='Gender'>
+                                 <MenuItem value={0}>Male</MenuItem>
+                                 <MenuItem value={1}>Female</MenuItem>
+                              </Select>
+                              {touched.gender && errors.gender ? (
+                                 <FormHelperText variant='outlined' color='error'>
+                                    {errors.gender as string}
+                                 </FormHelperText>
+                              ) : null}
+                           </FormControl>
+                        )}
+                     </Grid>
 
-                     <FormControl
-                        fullWidth
-                        variant='outlined'
-                        className='edit-profile-dialog__grid__left__dialog__input'
-                        error={touched.gender && Boolean(errors.gender)}
-                     >
-                        <InputLabel htmlFor='gender'>Giới tính</InputLabel>
-                        <Select id='gender' {...getFieldProps('gender')} label='Gender'>
-                           <MenuItem value={0}>Male</MenuItem>
-                           <MenuItem value={1}>Female</MenuItem>
-                        </Select>
-                        {touched.gender && errors.gender ? (
-                           <FormHelperText variant='outlined' color='error'>
-                              {errors.gender as string}
-                           </FormHelperText>
-                        ) : null}
-                     </FormControl>
-
-                     <TextField
-                        autoFocus
-                        margin='dense'
-                        id='address'
-                        {...getFieldProps('address')}
-                        className='edit-profile-dialog__grid__left__dialog__input'
-                        label='Địa chỉ'
-                        type='text'
-                        fullWidth
-                        variant='outlined'
-                        error={touched.address && Boolean(errors.address)}
-                        helperText={
-                           touched.address && errors.address ? (
-                              <Typography variant='caption' color='error'>
-                                 {errors.address as string}
-                              </Typography>
-                           ) : null
-                        }
-                     />
+                     <Grid xs={12} mb={2} gap={1}>
+                        <Autocomplete
+                           disablePortal
+                           value={
+                              values?.city
+                                 ? getAllProvinces().find(i => i.value === values?.city)?.label
+                                 : null
+                           }
+                           options={getAllProvinces()}
+                           isOptionEqualToValue={({ value }, { value: _value }) => value === _value}
+                           renderInput={params => (
+                              <TextField {...params} variant='outlined' label='City' />
+                           )}
+                           {...getFieldProps('city')}
+                           onChange={(_, option) => {
+                              setFieldValue('city', option?.value);
+                              setListDistricts(getListDistrictsByProvinceCode(option?.value));
+                           }}
+                        />
+                     </Grid>
+                     <Grid xs={12} mb={2} gap={1}>
+                        <Autocomplete
+                           disablePortal
+                           value={
+                              values?.district
+                                 ? listDistricts.find(i => i.value === values?.district)?.label
+                                 : null
+                           }
+                           options={listDistricts}
+                           isOptionEqualToValue={({ value }, { value: _value }) => value === _value}
+                           renderInput={params => (
+                              <TextField {...params} variant='outlined' label='District' />
+                           )}
+                           {...getFieldProps('district')}
+                           onChange={(_, option) => {
+                              setFieldValue('district', option?.value);
+                              setListWards(getListWardsByDistrictCode(option?.value));
+                           }}
+                        />
+                     </Grid>
+                     <Grid xs={12} mb={2} gap={1}>
+                        <Autocomplete
+                           disablePortal
+                           options={listWards}
+                           value={
+                              values?.ward
+                                 ? listWards.find(i => i.value === values?.ward)?.label
+                                 : null
+                           }
+                           isOptionEqualToValue={({ value }, { value: _value }) => value === _value}
+                           renderInput={params => (
+                              <TextField {...params} variant='outlined' label='Ward' />
+                           )}
+                           {...getFieldProps('ward')}
+                           onChange={(_, option) => {
+                              setFieldValue('ward', option?.value);
+                           }}
+                        />
+                     </Grid>
+                     <Grid xs={12} mb={2} gap={1}>
+                        <TextField
+                           fullWidth
+                           variant='outlined'
+                           type='text'
+                           label='Address'
+                           name='address'
+                           placeholder='Enter your address'
+                           {...getFieldProps('address')}
+                        />
+                     </Grid>
                   </DialogContent>
                   <DialogActions className='dialog-actions'>
-                     <Button onClick={handleClose}>Cancel</Button>
-                     <Button onClick={handleUpdateProfile} disabled={!dirty}>
+                     <Button
+                        variant='outlined'
+                        sx={{ color: PRIMARY_COLOR, border: '1px solid #811315' }}
+                        onClick={handleClose}
+                     >
+                        Cancel
+                     </Button>
+                     <Button
+                        variant='outlined'
+                        sx={{ color: PRIMARY_COLOR, border: '1px solid #811315' }}
+                        onClick={handleUpdateProfile}
+                        disabled={!dirty}
+                     >
                         Update
                      </Button>
                   </DialogActions>
@@ -314,7 +375,7 @@ const EditProfile = (props: Props) => {
                      <CardActionArea className='edit-profile-dialog__grid__right__card__action-area'>
                         <CardMedia
                            component='img'
-                           image={url_img}
+                           image={ava_default}
                            alt='green iguana'
                            className='edit-profile-dialog__grid__right__card__action-area__img'
                         />
@@ -331,14 +392,21 @@ const EditProfile = (props: Props) => {
                               variant='h5'
                               component='div'
                            >
-                              {values?.username}
+                              {values?.fullname}
                            </Typography>
                            <Typography
                               className='edit-profile-dialog__grid__right__card__action-area__text'
                               variant='body1'
                               color='text.secondary'
                            >
-                              {values?.fullName || 'XXXXXXXX'}
+                              Email: {values?.email || 'XXXXXXXX'}
+                           </Typography>
+                           <Typography
+                              className='edit-profile-dialog__grid__right__card__action-area__text'
+                              variant='body2'
+                              color='text.secondary'
+                           >
+                              SĐT: {values?.phoneNumber || 'Update your bio'}
                            </Typography>
                            <Typography
                               className='edit-profile-dialog__grid__right__card__action-area__text'
@@ -346,7 +414,7 @@ const EditProfile = (props: Props) => {
                               sx={{ mb: 1 }}
                               color='text.secondary'
                            >
-                              {values?.bio || 'Update your bio'}
+                              Ngày sinh: {values?.birthdate || 'Update your bio'}
                            </Typography>
                         </CardContent>
                      </CardActionArea>

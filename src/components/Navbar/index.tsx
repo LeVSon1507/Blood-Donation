@@ -6,7 +6,6 @@ import {
    Typography,
    styled,
    ListItemButton,
-   ListItemText,
    IconButton,
    Button,
 } from '@mui/material';
