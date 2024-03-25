@@ -1,4 +1,5 @@
-import { Typography } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
+import dayjs from "dayjs";
 import { MRT_ColumnDef } from "material-react-table";
 import { NavLink } from "react-router-dom";
 import {
@@ -6,9 +7,25 @@ import {
   getDistrictByCode,
   getProvinceByCode,
   getWardByCode,
+  RequestStatus,
 } from "src/utils";
+import { AiFillCaretLeft } from "react-icons/ai";
 
 export const allColumns: Array<MRT_ColumnDef<any>> = [
+  {
+    accessorKey: "requestId",
+    header: "",
+    size: 50,
+    Cell: ({ row }) => {
+      const requestid = row.original.requestid;
+
+      return (
+        <NavLink to={`/manage/requests/detail/${requestid}`}>
+          <AiFillCaretLeft size={24} />
+        </NavLink>
+      );
+    },
+  },
   {
     accessorKey: "hospitals.nameHospital",
     header: "Hospital",
@@ -18,7 +35,7 @@ export const allColumns: Array<MRT_ColumnDef<any>> = [
       const name = data.hospitals?.nameHospital;
 
       return (
-        <NavLink to={`/manage/hospitals/${data?.userId}`} className={""}>
+        <NavLink to={`/manage/hospitals/${data?.hospitalid}`} className={""}>
           {name}
         </NavLink>
       );
@@ -31,7 +48,7 @@ export const allColumns: Array<MRT_ColumnDef<any>> = [
     Cell: ({ row }) => {
       const requestDate = row.original?.requestDate;
 
-      return <Typography>{formatDate(requestDate)}</Typography>;
+      return <Typography fontSize={14}>{formatDate(requestDate)}</Typography>;
     },
   },
   {
@@ -43,11 +60,29 @@ export const allColumns: Array<MRT_ColumnDef<any>> = [
     accessorKey: "starttime",
     header: "Start Time",
     size: 50,
+    Cell: ({ row }) => {
+      const data = row.original?.starttime;
+
+      return (
+        <Typography fontSize={14}>
+          {dayjs(data).format("hh:mm A")?.toString()}
+        </Typography>
+      );
+    },
   },
   {
     accessorKey: "endtime",
     header: "End Time",
     size: 50,
+    Cell: ({ row }) => {
+      const data = row.original?.endtime;
+
+      return (
+        <Typography fontSize={14}>
+          {dayjs(data).format("hh:mm A")?.toString()}
+        </Typography>
+      );
+    },
   },
   {
     accessorKey: "address",
@@ -66,6 +101,23 @@ export const allColumns: Array<MRT_ColumnDef<any>> = [
         .join(", ");
 
       return <Typography fontSize={14}>{address}</Typography>;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    size: 200,
+    Cell: ({ row }) => {
+      const data = row.original;
+
+      return (
+        <Chip
+          label={
+            data === RequestStatus.Approve ? "Chấp thuận" : "Đang chờ xử lí"
+          }
+          color={data === RequestStatus.Approve ? "success" : "warning"}
+        />
+      );
     },
   },
 ];
