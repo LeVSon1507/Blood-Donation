@@ -11,7 +11,6 @@ import {
    http,
    isEmpty,
 } from 'src/utils';
-import { useAuth } from 'src/context';
 import LoadingCommon from 'src/components/LoadingCircle';
 import { Typography } from '@mui/material';
 
@@ -20,7 +19,6 @@ function DetailSection({ hospitalId }: { hospitalId?: string }) {
 
    const [isLoading, setIsLoading] = useState(false);
    const [hospital, setHospital] = useState<User>();
-   console.log('🚀 ~ DetailSection ~ hospital:', hospital);
 
    useEffect(() => {
       setIsLoading(true);

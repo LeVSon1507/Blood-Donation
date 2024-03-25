@@ -44,7 +44,6 @@ const itemList = (isLogin: boolean) => [
       text: 'Hỏi Đáp',
       to: '/qa',
    },
-   // TODO: implement news later
    {
       text: 'Tin Tức',
       to: '/news',
@@ -58,8 +57,6 @@ const itemList = (isLogin: boolean) => [
       to: !isLogin ? '/login' : '/profile',
    },
 ];
-
-// const LOGOUT_CONTENT = 'Do you want to logout?';
 
 const Navbar = props => {
    const { isAdmin } = props || {};
@@ -78,10 +75,6 @@ const Navbar = props => {
    const goToDashBoard = () => {
       navigate('/home');
    };
-
-   //  const onConfirm = () => {
-   //     navigate('/auth');
-   //  };
 
    const isLogin = !!localStorage.getItem('token') && !!localStorage.getItem('userId');
 
@@ -149,6 +142,7 @@ const Navbar = props => {
                            <ListItemButton
                               component={Link}
                               to={item.to}
+                              className=' h-[40px]'
                               sx={{
                                  color: '#fff',
                                  '&:hover': {
@@ -157,7 +151,13 @@ const Navbar = props => {
                                  },
                               }}
                            >
-                              <ListItemText primary={text} />
+                              <Typography
+                                 className='d-flex text-center align-items-center '
+                                 variant='subtitle2'
+                                 sx={{ color: '#fff' }}
+                              >
+                                 {text}
+                              </Typography>
                            </ListItemButton>
                         </Button>
                      );
