@@ -15,7 +15,7 @@ class Http {
     });
     this.instance.interceptors.response.use(
       (response) => {
-        const result = { data: response.data, status: response.status };
+        const result = { data: response.data, status: response?.status };
         return result;
       },
       ({ response }) => {
@@ -25,7 +25,7 @@ class Http {
             autoClose: 3000,
           });
         }
-        const result = { data: response.data, status: response.status };
+        const result = { data: response.data, status: response?.status };
         return Promise.reject(result);
       }
     );
