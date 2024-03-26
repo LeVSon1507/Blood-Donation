@@ -22,16 +22,39 @@ const Profile = (props: IPersonalProps) => {
    const [error, setError] = useState('');
    const [registerCount, setRegisterCount] = useState('');
    const [openEdit, setOpenEdit] = useState(false);
-   const currentUser = JSON.parse(localStorage.getItem('currentUser')) as unknown as User;
+   const [user, setUser] = useState<User>();
+   const userId = JSON.parse(localStorage.getItem('userId')) as unknown as User;
 
    useEffect(() => {
       http
-         .get(`/volunteer/countblooddonationsessions?volunteerid=${currentUser?.userId}`)
+         .get(`/volunteer/countblooddonationsessions?volunteerid=${userId}`)
          .then(res => setRegisterCount(res?.data?.data))
          .catch(err => {
             setError(err?.message);
          });
-   }, [currentUser?.userId]);
+      http
+         .get(`/user/profile?id=${userId}`)
+         .then(res => {
+            return res?.data?.data;
+         })
+         .then(data => {
+            if (data) {
+               const newData = {
+                  ...data,
+                  ...data?.volunteers,
+                  ...data?.hospitals,
+                  ...data?.bloodbank,
+               };
+               setUser(newData);
+               localStorage.setItem('currentUser', JSON.stringify(newData));
+            }
+         })
+         .catch(err => {
+            setError(err?.message);
+         });
+   }, [userId]);
+
+   const currentUser = user ?? (JSON.parse(localStorage.getItem('currentUser')) as unknown as User);
 
    const city = getProvinceByCode(currentUser?.city?.toString())?.name;
    const ward = getWardByCode(currentUser?.ward?.toString())?.name;
