@@ -19,6 +19,7 @@ import Logout from '@mui/icons-material/Logout';
 import logo1 from 'src/assets/images/undraw_doctors_p6aq.svg';
 import { url_img } from '../../utils/const';
 import DialogCommon from '../DialogCommon/DialogCommon';
+import { Role } from 'src/utils';
 
 const StyledToolbar = styled(Toolbar)({
    display: 'flex',
@@ -34,7 +35,7 @@ const ListMenu = styled(List)(({ theme }) => ({
    },
 }));
 
-const itemList = (isLogin: boolean) => [
+const itemList = (isLogin: boolean, isAdmin: boolean) => [
    {
       text: 'Trang Chủ',
       to: '/home',
@@ -51,6 +52,10 @@ const itemList = (isLogin: boolean) => [
       text: 'Liên Hệ',
       to: '/contact-us',
    },
+   isAdmin && {
+      text: 'Trang Admin',
+      to: '/manage',
+   },
    {
       text: !isLogin ? 'Đăng Nhập' : 'Trang cá nhân',
       to: !isLogin ? '/login' : '/profile',
@@ -62,6 +67,11 @@ const Navbar = props => {
    const navigate = useNavigate();
    const [anchorEl, setAnchorEl] = useState<boolean>(false);
    const [open, setOpen] = useState<boolean>(false);
+   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+   const isRoleAdmin =
+      currentUser?.role === Role.Admin ||
+      currentUser?.role === Role.BloodBank ||
+      currentUser?.role === Role.Hospital;
 
    const goToLandingPage = () => {
       navigate('/');
@@ -72,7 +82,7 @@ const Navbar = props => {
    };
 
    const goToDashBoard = () => {
-      navigate('/home');
+      isRoleAdmin ? navigate('/manage') : navigate('/home');
    };
 
    const isLogin = !!localStorage.getItem('token') && !!localStorage.getItem('userId');
@@ -107,7 +117,7 @@ const Navbar = props => {
                   cursor: 'pointer',
                   alignItems: 'center',
                }}
-               onClick={isAdmin ? goToDashBoard : goToLandingPage}
+               onClick={isRoleAdmin ? goToDashBoard : goToLandingPage}
             >
                <img
                   src={logo1}
@@ -131,7 +141,7 @@ const Navbar = props => {
             </Box>
             {!isAdmin ? (
                <ListMenu>
-                  {itemList(isLogin).map(item => {
+                  {itemList(isLogin, isRoleAdmin).map(item => {
                      const { text } = item;
                      return (
                         <Button
