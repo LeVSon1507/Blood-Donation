@@ -14,6 +14,7 @@ import axios from 'axios';
 import DialogCommon from 'src/components/DialogCommon/DialogCommon';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { LinearProgress, Typography } from '@mui/material';
+import dayjs from 'dayjs';
 
 const NOT_VALID_REGISTER_MESSAGE =
    'Bạn không đủ điều kiện để đăng kí, đợi một khoảng thời gian sau hoặc liên hệ admin để biết thêm chi tiết!';
@@ -73,11 +74,33 @@ function RequestItem({ data }: { data: SearchRequest }) {
          navigate('/login');
       }
    };
+   const today = dayjs();
+   const dataRequestDate = dayjs(data?.requestDate);
+
+   const handleCheckDay = () => {
+      if (dataRequestDate?.isValid()) {
+         if (today?.isAfter(dataRequestDate)) {
+            return ToastError('Ngày hiện tại lớn hơn ngày tổ chức hiến máu');
+         } else if (today?.isBefore(dataRequestDate)) {
+            return ToastError('Ngày tổ chức hiến máu lớn hơn ngày hiện tại');
+         } else {
+            return true;
+         }
+      } else {
+         return ToastError('Khoảng thời gian của buổi hiến máu không hợp lệ!');
+      }
+   };
 
    const handleYes = async () => {
       if (!isLogin) return navigate('/login');
+
       if (result !== 0) {
          return ToastError(NOT_VALID_REGISTER_MESSAGE);
+      }
+
+      if (!handleCheckDay()) {
+         setOpen(false);
+         return;
       }
 
       setIsLoading(true);
@@ -99,6 +122,7 @@ function RequestItem({ data }: { data: SearchRequest }) {
             setOpen(false);
             setIsLoading(false);
             setResult(null);
+            window.location.reload();
             navigate('/home');
          })
          .catch(err => {
