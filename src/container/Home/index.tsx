@@ -8,20 +8,19 @@ import { API_KEY, SearchRequest, User, isEmpty, token } from 'src/utils';
 import { Dayjs } from 'dayjs';
 import { DateRange } from '@mui/x-date-pickers-pro';
 import ErrorPage from 'src/components/ErrorPage';
-import { useAuth } from 'src/context';
 import { ToastError } from 'src/utils/toastOptions';
 import Gallery from '../LandingView/about/gallery';
 import NoResult from './NoResult';
 import HaveResult from './HaveResult';
+import CheckboxFindInCity from '../CheckboxFindInCity';
 
 function HomePage() {
    const [startEndDate, setStartEndDate] = React.useState<DateRange<Dayjs>>([null, null]);
    const [error, setError] = useState('');
    const [requestList, setRequestList] = useState<SearchRequest[]>([]);
    const [isSearchInMyCity, setIsSearchInMyCity] = useState(false);
-   const { user } = useAuth();
    const [isLoading, setIsLoading] = useState(false);
-   const currentUser = user ?? (JSON.parse(localStorage.getItem('currentUser')) as unknown as User);
+   const currentUser = JSON.parse(localStorage.getItem('currentUser')) as unknown as User;
 
    const handleSearchInMyCity = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.checked;
@@ -63,6 +62,8 @@ function HomePage() {
          });
    }, [endDateParam, isSearchInMyCity, startDateParam, volunteerIdParam]);
 
+   const isSearching = !isEmpty(startEndDate[0]) && !isEmpty(startEndDate[1]);
+
    return error ? (
       <>{<ErrorPage message={error} />}</>
    ) : (
@@ -75,22 +76,32 @@ function HomePage() {
                setStartEndDate={setStartEndDate}
                handleSearchInMyCity={handleSearchInMyCity}
                userCity={currentUser?.city}
+               isSearchInMyCity={isSearchInMyCity}
             />
          ) : (
             <>
-               <Gallery />
+               {!isSearching && <Gallery />}
                <div className='w-full h-[2px] bg-black my-6' />
                <DateRangePickerValue setValue={setStartEndDate} value={startEndDate} />
+               {isSearching && (
+                  <CheckboxFindInCity
+                     handleSearchInMyCity={handleSearchInMyCity}
+                     isSearchInMyCity={isSearchInMyCity}
+                     city={currentUser?.city}
+                  />
+               )}
                <NoResult
                   isLoading={isLoading}
                   startEndDate={startEndDate}
                   setStartEndDate={setStartEndDate}
                   isEmptyData={isEmpty(requestList)}
                />
-               <div className='w-full h-[2px] bg-black mt-6 mb-6' />
-               <Standard />
-               <div className='w-full h-[2px] bg-black mb-64' />
-               <Note />
+               <>
+                  <div className='w-full h-[2px] bg-black mt-6 mb-6' />
+                  <Standard />
+                  <div className='w-full h-[2px] bg-black mb-64' />
+                  <Note />
+               </>
             </>
          )}
       </div>

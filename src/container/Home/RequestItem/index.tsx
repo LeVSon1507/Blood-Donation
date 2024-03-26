@@ -14,7 +14,6 @@ import axios from 'axios';
 import DialogCommon from 'src/components/DialogCommon/DialogCommon';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { LinearProgress, Typography } from '@mui/material';
-import { useAuth } from 'src/context';
 
 const NOT_VALID_REGISTER_MESSAGE =
    'Bạn không đủ điều kiện để đăng kí, đợi một khoảng thời gian sau hoặc liên hệ admin để biết thêm chi tiết!';
@@ -39,9 +38,7 @@ function RequestItem({ data }: { data: SearchRequest }) {
 
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-   const { user } = useAuth();
-
-   const currentUser = user ?? (JSON.parse(localStorage.getItem('currentUser')) as unknown as User);
+   const currentUser = JSON.parse(localStorage.getItem('currentUser')) as unknown as User;
 
    useEffect(() => {
       axios
@@ -67,7 +64,7 @@ function RequestItem({ data }: { data: SearchRequest }) {
 
    const handleRegister = () => {
       if (isLogin) {
-         if (isEmpty(currentUser?.volunteers?.fullname)) {
+         if (isEmpty(currentUser?.fullname)) {
             ToastError('Vui cập nhật thông tin cá nhân của bạn!');
             return navigate('/profile');
          }

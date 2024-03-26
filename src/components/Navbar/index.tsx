@@ -14,12 +14,11 @@ import DrawerItem from '../../container/LandingView/DrawerItem';
 import { useState } from 'react';
 import { Avatar, Menu, MenuItem, Divider, ListItemIcon } from '@mui/material';
 import './Header.scss';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
 import logo1 from 'src/assets/images/undraw_doctors_p6aq.svg';
 import { url_img } from '../../utils/const';
 import DialogCommon from '../DialogCommon/DialogCommon';
 import { Role } from 'src/utils';
+import { IoMenu } from 'react-icons/io5';
 
 const StyledToolbar = styled(Toolbar)({
    display: 'flex',
@@ -52,9 +51,10 @@ const itemList = (isLogin: boolean, isAdmin: boolean) => [
       text: 'Liên Hệ',
       to: '/contact-us',
    },
-   isAdmin && {
+   {
       text: 'Trang Admin',
       to: '/manage',
+      isHidden: !isAdmin,
    },
    {
       text: !isLogin ? 'Đăng Nhập' : 'Trang cá nhân',
@@ -68,6 +68,7 @@ const Navbar = props => {
    const [anchorEl, setAnchorEl] = useState<boolean>(false);
    const [open, setOpen] = useState<boolean>(false);
    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+   const [showBtn, setShowBtn] = useState<boolean>(false);
    const isRoleAdmin =
       currentUser?.role === Role.Admin ||
       currentUser?.role === Role.BloodBank ||
@@ -86,6 +87,14 @@ const Navbar = props => {
    };
 
    const isLogin = !!localStorage.getItem('token') && !!localStorage.getItem('userId');
+
+   const onClickAva = () => {
+      if (isLogin) {
+         isRoleAdmin ? navigate('/manage') : navigate('/home');
+      } else {
+         navigate('/login');
+      }
+   };
 
    const onLogin = () => {
       navigate('/login');
@@ -109,7 +118,7 @@ const Navbar = props => {
          }}
          elevation={0}
       >
-         <StyledToolbar>
+         <StyledToolbar className='menu-bar'>
             <Box
                sx={{
                   display: 'flex',
@@ -139,10 +148,12 @@ const Navbar = props => {
             <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
                <DrawerItem />
             </Box>
-            {!isAdmin ? (
+
+            {showBtn ? (
                <ListMenu>
                   {itemList(isLogin, isRoleAdmin).map(item => {
-                     const { text } = item;
+                     const { text, isHidden } = item;
+                     if (isHidden) return null;
                      return (
                         <Button
                            sx={{ backgroundColor: '#811315', mr: 1, borderRadius: 3 }}
@@ -171,6 +182,13 @@ const Navbar = props => {
                         </Button>
                      );
                   })}
+                  <Box
+                     className='d-flex align-items-center flex-end'
+                     sx={{ cursor: 'pointer' }}
+                     onClick={() => setShowBtn(prev => !prev)}
+                  >
+                     <IoMenu size={30} />
+                  </Box>
                   {isLogin && <Button onClick={handleLoginLogout}>{'Đăng Xuất'}</Button>}
                   <DialogCommon
                      content='Bạn có muốn đăng xuất không?'
@@ -200,27 +218,32 @@ const Navbar = props => {
                         elevation: 0,
                         className: 'custom-paper_admin',
                      }}
+                     className='mr-3'
                      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                     anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                     anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
                   >
-                     <MenuItem onClick={handleClose}>
-                        <ListItemIcon>
+                     <MenuItem
+                        onClick={() => {
+                           onClickAva();
+                           handleClose();
+                        }}
+                     >
+                        <ListItemIcon className='mr-3'>
                            <Avatar src={url_img} alt='avatar' />
                         </ListItemIcon>
-                        Profile Infor
+                        {currentUser?.email ?? 'Login'}
                      </MenuItem>
                      <Divider />
-                     <MenuItem onClick={handleClose}>
+                     <MenuItem
+                        onClick={() => {
+                           handleClose();
+                           setShowBtn(prev => !prev);
+                        }}
+                     >
                         <ListItemIcon>
-                           <Settings fontSize='small' />
+                           <IoMenu size={30} />
                         </ListItemIcon>
-                        Settings
-                     </MenuItem>
-                     <MenuItem onClick={() => {}}>
-                        <ListItemIcon>
-                           <Logout fontSize='small' />
-                        </ListItemIcon>
-                        Logout
+                        Menu
                      </MenuItem>
                   </Menu>
                </Box>
