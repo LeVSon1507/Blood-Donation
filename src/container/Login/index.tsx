@@ -30,7 +30,7 @@ const Login: React.FC = () => {
          navigate(`/manage/hospitals/${user?.userId}`);
       }
       if (isManager) {
-         navigate('/manage/blood-bank');
+         navigate('/manage/hospitals');
       }
       if (isUser) {
          navigate('/home');
