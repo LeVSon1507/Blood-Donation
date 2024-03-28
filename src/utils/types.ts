@@ -137,4 +137,5 @@ export enum Role {
 export enum RequestStatus {
   Approve = 1,
   Pending = 0,
+  Reject = 2,
 }

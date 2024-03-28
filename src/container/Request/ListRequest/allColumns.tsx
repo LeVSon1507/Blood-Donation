@@ -11,6 +11,19 @@ import {
 } from "src/utils";
 import { AiFillCaretLeft } from "react-icons/ai";
 
+const getStatus = (status) => {
+  switch (status) {
+    case RequestStatus.Pending:
+      return { label: "Đang chờ xử lí", color: "warning" };
+    case RequestStatus.Approve:
+      return { label: "Chấp thuận", color: "success" };
+    case RequestStatus.Reject:
+      return { label: "Không chấp thuận", color: "error" };
+    default:
+      return null;
+  }
+};
+
 export const allColumns: Array<MRT_ColumnDef<any>> = [
   {
     accessorKey: "requestId",
@@ -108,14 +121,11 @@ export const allColumns: Array<MRT_ColumnDef<any>> = [
     header: "Status",
     size: 200,
     Cell: ({ row }) => {
-      const data = row.original;
-
+      const data = row.original?.status;
       return (
         <Chip
-          label={
-            data === RequestStatus.Approve ? "Chấp thuận" : "Đang chờ xử lí"
-          }
-          color={data === RequestStatus.Approve ? "success" : "warning"}
+          label={getStatus(data)?.label || "--"}
+          color={getStatus(data)?.color as "success" | "error" | "warning"}
         />
       );
     },
