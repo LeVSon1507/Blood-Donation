@@ -12,6 +12,7 @@ import {
 } from "src/utils";
 import dayjs from "dayjs";
 import { Chip } from "@mui/material";
+import ListRegister from "../ListRegister";
 
 const RequestDetail: React.FC = () => {
   const { id } = useParams();
@@ -121,6 +122,9 @@ const RequestDetail: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="w-full px-5 py-5 shadow-lg rounded-xl mt-8">
+        <ListRegister />
       </div>
     </div>
   );

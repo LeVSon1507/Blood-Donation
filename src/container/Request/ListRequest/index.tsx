@@ -9,11 +9,14 @@ import Button from "src/components/Button";
 import { useAuth } from "src/context";
 import { getCurrentUser, http, PRIMARY_COLOR, Role } from "src/utils";
 import { allColumns } from "./allColumns";
+import StatusModal from "./StatusModal";
 
 const ListRequest: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const currentUser = user?.userId ? user : getCurrentUser();
+  const [statusRole, setStatusRow] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   const [listRequests, setListRequests] = useState([]);
 
@@ -45,6 +48,36 @@ const ListRequest: React.FC = () => {
 
   const handleDeleteRequest = (row) => {};
 
+  const handleChangeStatus = (row) => {
+    setStatusRow(row);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleSave = (status: Request, requestId: string) => {
+    http
+      .put(`Manager/acceptRequest`, {
+        id: requestId,
+        status: status,
+      })
+      .then(() => {
+        const requestId = currentUser?.userId;
+        setTimeout(() => {}, 1000);
+        http
+          .get(`Manager/listRequestsByBloodbank?bloodbankid=${requestId}`)
+          .then((res) => {
+            setListRequests(res?.data?.data);
+            setOpenModal(false);
+          });
+      })
+      .catch((err) => {
+        setOpenModal(false);
+      });
+  };
+
   const table = useMaterialReactTable({
     columns: allColumns,
     data: listRequests,
@@ -63,10 +96,13 @@ const ListRequest: React.FC = () => {
     },
     renderRowActionMenuItems: ({ row }) => [
       <MenuItem key="edit" onClick={() => handleEditRequest(row?.original)}>
-        Edit
+        Cập Nhật
       </MenuItem>,
       <MenuItem key="delete" onClick={() => handleDeleteRequest(row?.original)}>
-        Delete
+        Xóa
+      </MenuItem>,
+      <MenuItem key="status" onClick={() => handleChangeStatus(row?.original)}>
+        Thay Đổi Trạng Thái
       </MenuItem>,
     ],
   });
@@ -83,6 +119,12 @@ const ListRequest: React.FC = () => {
           )}
         </div>
         <MaterialReactTable table={table} />
+        <StatusModal
+          open={openModal}
+          handleClose={handleCloseModal}
+          handleChangeStatus={handleSave}
+          data={statusRole}
+        />
       </div>
     </>
   );
