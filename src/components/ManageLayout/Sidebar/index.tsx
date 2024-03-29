@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdOutlineMapsHomeWork } from 'react-icons/md';
+import { MdBloodtype, MdOutlineMapsHomeWork } from 'react-icons/md';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { MdOutlineBusinessCenter } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
@@ -30,6 +30,12 @@ const Sidebar = () => {
          title: 'Yêu cầu',
          path: '/manage/requests',
          isDisplay: isAdmin || isManager || isHospital,
+      },
+      {
+         icon: <MdBloodtype />,
+         title: 'Kho Máu',
+         path: '/manage/list-blood',
+         isDisplay: isManager || isHospital,
       },
    ];
 
