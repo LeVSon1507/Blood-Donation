@@ -16,7 +16,7 @@ const ListBlood: React.FC = () => {
    console.log('🚀 ~ listBlood:', listBlood);
 
    useEffect(() => {
-      http.get(`Hopital/displaysremainingblood?id=62`).then(res => {
+      http.get(`Hopital/displaysremainingblood?id=${currentUser?.userId}`).then(res => {
          setListBlood(res?.data?.data);
       });
    }, [currentUser?.userId]);
@@ -45,7 +45,7 @@ const ListBlood: React.FC = () => {
       <div className='ml-4'>
          <div className='w-full flex flew-row justify-between items-center'>
             <Typography variant='h4' color={PRIMARY_COLOR} mb={2}>
-               List Blood
+               Danh sách máu đang có trong kho
             </Typography>
             <Button onClick={handleAddBlood}>Tạo</Button>
          </div>
