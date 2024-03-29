@@ -35,6 +35,15 @@ function DetailSection({ hospitalId }: { hospitalId?: string }) {
          });
    }, [id]);
 
+   const address = [
+      hospital?.address,
+      getWardByCode(hospital?.district)?.name,
+      getDistrictByCode(hospital?.ward)?.name,
+      getProvinceByCode(hospital?.city)?.name,
+   ]
+      .filter(item => item)
+      .join(', ');
+
    return isLoading ? (
       <LoadingCommon additionalClass='w-[100vh]' />
    ) : (
@@ -59,12 +68,7 @@ function DetailSection({ hospitalId }: { hospitalId?: string }) {
                                     Đã tổ chức {hospital?.hospitals?.requests?.length} buổi hiến
                                     máu.
                                  </p>
-                                 <p className='text-muted font-size-sm'>
-                                    {hospital?.address},{' '}
-                                    {getDistrictByCode(hospital?.district)?.name},{' '}
-                                    {getWardByCode(hospital?.ward)?.name},{' '}
-                                    {getProvinceByCode(hospital?.city)?.name}
-                                 </p>
+                                 <p className='text-muted font-size-sm'>{address}</p>
                               </div>
                            </div>
                            <hr className='my-4' />

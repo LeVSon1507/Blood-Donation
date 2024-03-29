@@ -74,7 +74,7 @@ const Sidebar = () => {
                />
             </div>
             <div className='flex flex-col text-slate-600'>
-               <span className='font-semibold'>{user?.email || 'dat@gmail.com'}</span>
+               <span className='font-semibold'>{user?.email || 'admin-email@gmail.com'}</span>
                <span className='text-sm'>{'Admin'}</span>
             </div>
          </div>
