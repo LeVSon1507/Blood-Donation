@@ -1,0 +1,40 @@
+{
+   "registerId": 12,
+   "volunteerid": 0,
+   "requestid": 0,
+   "quantity": 0,
+   "bloodtypeid": 0,
+   "requests": null,
+   "volunteers": {
+      "volunteerid": 26,
+      "birthdate": "2001-03-01T00:00:00",
+      "gender": 0,
+      "fullname": "Le Van Son",
+      "cccd": "123123123123",
+      "users": {
+         "userId": 26,
+         "img": "https://www.clevelanddentalhc.com/wp-content/uploads/2018/03/sample-avatar.jpg",
+         "email": "son@gmail.com",
+         "password": "25d55ad283aa400af464c76d713c07ad",
+         "phoneNumber": "982055105",
+         "city": "27",
+         "ward": "9211",
+         "district": "258",
+         "address": "123 nguyen van linh",
+         "deactive": 1,
+         "role": 1,
+         "volunteers": null,
+         "hospitals": null,
+         "bloodbank": null,
+         "notifications": []
+      },
+      "registers": []
+   },
+   "bloodtypes": {
+      "bloodtypeid": 1,
+      "nameBlood": "Chưa biết nhóm máu",
+      "registers": [],
+      "quantityTake": [],
+      "quantitySend": []
+   }
+}

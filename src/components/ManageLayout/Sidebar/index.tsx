@@ -3,8 +3,7 @@ import { MdBloodtype, MdOutlineMapsHomeWork } from 'react-icons/md';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { MdOutlineBusinessCenter } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
-import { useAuth } from 'src/context';
-import { Role, User } from 'src/utils';
+import { Role, User, getCurrentUser } from 'src/utils';
 
 const Sidebar = () => {
    const currentUser = JSON.parse(localStorage.getItem('currentUser')) as unknown as User;
@@ -41,7 +40,19 @@ const Sidebar = () => {
 
    const itemsValid = items?.filter(item => item?.isDisplay);
 
-   const { user } = useAuth();
+   const user = getCurrentUser();
+
+   const handleRenderRole = (role: Role) => {
+      if (role === Role.Admin) {
+         return 'Admin';
+      }
+      if (role === Role.Hospital) {
+         return 'Bệnh Viện';
+      }
+      if (role === Role.BloodBank) {
+         return 'Kho máu';
+      }
+   };
 
    return (
       <div className='w-[300px] h-full shadow-lg flex flex-col pt-5  items-center  text-slate-500 bg-white'>
@@ -75,7 +86,7 @@ const Sidebar = () => {
             </div>
             <div className='flex flex-col text-slate-600'>
                <span className='font-semibold'>{user?.email || 'admin-email@gmail.com'}</span>
-               <span className='text-sm'>{'Admin'}</span>
+               <span className='text-sm'>{handleRenderRole(user?.role)}</span>
             </div>
          </div>
       </div>

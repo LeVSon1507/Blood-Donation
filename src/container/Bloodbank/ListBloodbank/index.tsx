@@ -43,7 +43,9 @@ const ListBlood: React.FC = () => {
       // });
    };
 
-   const handleAddBlood = () => {};
+   const handleAddBlood = () => {
+      ToastError('Đang trong quá trình phát triển, xin lỗi vì sự bất tiện này!');
+   };
 
    const handleRequestBlood = (id: number, totalBloodDTOs: any) => {
       if (bloodTypeId) bloodTypeId = id;
