@@ -139,3 +139,15 @@ export enum RequestStatus {
    Pending = 0,
    Reject = 2,
 }
+
+export type BloodTotalDTO = {
+   numberbloodid: number;
+   quantity: number;
+   total: number;
+};
+
+export type ListBloodType = {
+   bloodtypeid: number;
+   nameBlood: string;
+   totalBloodDTOs: BloodTotalDTO[];
+};

@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import { User } from './types';
 import { ToastError } from './toastOptions';
+import { getDistrictByCode, getProvinceByCode, getWardByCode } from './Address';
+import { isEmpty } from './const';
 
 export const useScrollTop = () => {
    useEffect(() => {
@@ -215,4 +217,20 @@ export type Callback = (...args: any[]) => void;
 
 export const getCurrentUser = () => {
    return JSON.parse(localStorage.getItem('currentUser')) as unknown as User;
+};
+
+export const getFullAddress = (currentUser = getCurrentUser()) => {
+   const { address, district, ward, city } = currentUser;
+
+   if (isEmpty(address) && isEmpty(district) && isEmpty(ward) && isEmpty(city))
+      return 'Chưa cập nhật địa chỉ!';
+
+   return [
+      address,
+      getWardByCode(district)?.name,
+      getDistrictByCode(ward)?.name,
+      getProvinceByCode(city)?.name,
+   ]
+      .filter(item => item)
+      .join(', ');
 };

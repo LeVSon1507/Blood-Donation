@@ -84,7 +84,12 @@ const Profile = (props: IPersonalProps) => {
                   <Box className='bio_box'>
                      <span className='box_name'>
                         <Typography className='user_name'>
-                           Họ và tên: {currentUser?.fullname || 'Chưa cập nhật'}
+                           Họ và tên:{' '}
+                           {currentUser?.fullname ||
+                              currentUser?.hospitals?.nameHospital ||
+                              currentUser?.volunteers?.fullname ||
+                              currentUser?.bloodbank?.fullname ||
+                              'Chưa cập nhật'}
                         </Typography>
                         <Typography className='bio'>
                            <strong> Email: </strong>

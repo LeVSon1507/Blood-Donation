@@ -1,19 +1,27 @@
 import { Typography } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'src/context';
-import { getCurrentUser, http, PRIMARY_COLOR } from 'src/utils';
+import { BloodTotalDTO, getCurrentUser, http, ListBloodType, PRIMARY_COLOR } from 'src/utils';
 import { allColumns } from './allColumns';
 import Button from 'src/components/Button';
+import RequestBloodForm from '../RequestBloodForm';
+import { ToastError } from 'src/utils/toastOptions';
+
+type QuantityTake = {
+   numberbloodid: number;
+   quantity: number;
+};
 
 const ListBlood: React.FC = () => {
    const { user } = useAuth();
-   const navigate = useNavigate();
+   let bloodTypeId;
    const currentUser = user?.userId ? user : getCurrentUser();
 
-   const [listBlood, setListBlood] = useState([]);
-   console.log('🚀 ~ listBlood:', listBlood);
+   const [listBlood, setListBlood] = useState<ListBloodType[]>([]);
+   const [open, setOpen] = useState(false);
+   const [totalBloodOfType, setTotalBloodOfType] = useState<BloodTotalDTO>();
+   const [quantityTake, setQuantityTake] = React.useState<QuantityTake[]>([]);
 
    useEffect(() => {
       http.get(`Hopital/displaysremainingblood?id=${currentUser?.userId}`).then(res => {
@@ -21,12 +29,30 @@ const ListBlood: React.FC = () => {
       });
    }, [currentUser?.userId]);
 
-   const handleAddBlood = () => {
-      navigate('/manage/create-hospitals');
+   const onRequestBlood = async () => {
+      ToastError('Đang trong quá trình phát triển, xin lỗi vì sự bất tiện này!');
+      // const body = {
+      //    hospitalid: currentUser?.userId,
+      //    datetake: dayjs(),
+      //    bloodtypeid: bloodTypeId,
+      //    quantityTake: quantityTake,
+      // };
+
+      // http.post(`Hopital/addtakeblood`, body).then(res => {
+      //    setListBlood(res?.data?.data);
+      // });
+   };
+
+   const handleAddBlood = () => {};
+
+   const handleRequestBlood = (id: number, totalBloodDTOs: any) => {
+      if (bloodTypeId) bloodTypeId = id;
+      setTotalBloodOfType(totalBloodDTOs);
+      setOpen(true);
    };
 
    const table = useMaterialReactTable({
-      columns: allColumns,
+      columns: allColumns(handleRequestBlood),
       data: listBlood,
       enableRowPinning: false,
       enableSorting: false,
@@ -50,6 +76,14 @@ const ListBlood: React.FC = () => {
             <Button onClick={handleAddBlood}>Tạo</Button>
          </div>
          <MaterialReactTable table={table} />
+         <RequestBloodForm
+            data={totalBloodOfType}
+            setOpen={setOpen}
+            open={open}
+            setQuantityTake={setQuantityTake}
+            quantityTake={quantityTake}
+            onRequestBlood={onRequestBlood}
+         />
       </div>
    );
 };
