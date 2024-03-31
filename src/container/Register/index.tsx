@@ -5,25 +5,45 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { schema } from './helpers';
 import { RE_CAPTCHA_SITE_KEY, http } from 'src/utils';
-import { Grid, TextField, Typography } from '@mui/material';
+import {
+   FormControl,
+   Grid,
+   InputLabel,
+   MenuItem,
+   Select,
+   TextField,
+   Typography,
+} from '@mui/material';
 import logo1 from 'src/assets/images/undraw_doctors_p6aq.svg';
 import Button from 'src/components/Button';
 import ReCAPTCHA from 'react-google-recaptcha';
+import dayjs from 'dayjs';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const RegisterPage = () => {
    const navigate = useNavigate();
 
    const {
       handleSubmit,
+      setValue,
+      watch,
       register,
       formState: { errors },
-   } = useForm({
+   } = useForm<any>({
       resolver: yupResolver(schema),
       mode: 'onSubmit',
       defaultValues: {
          email: '',
          password: '',
          confirmPassword: '',
+         phoneNumber: '',
+         cccd: '',
+         fullname: '',
+         user: '',
+         birthdate: dayjs(),
+         gender: 0,
       },
    });
 
@@ -36,7 +56,7 @@ const RegisterPage = () => {
          })
          .catch(err => {
             console.log(err);
-            toast.error(err?.data?.message);
+            toast.error(err?.data?.errorDetails);
          });
    };
 
@@ -63,6 +83,7 @@ const RegisterPage = () => {
                   Giọt Máu Hồng
                </Typography>
             </div>
+
             <form className='mx-auto max-w-[600px]' onSubmit={handleSubmit(onSubmit)}>
                <Grid xs={12} mb={2} gap={1}>
                   <TextField
@@ -75,7 +96,86 @@ const RegisterPage = () => {
                      {...register('email')}
                   />
                   {errors.email && (
-                     <p className='text-sm text-red-500 color-red'>{errors.email.message}</p>
+                     <p className='text-sm text-red-500 color-red'>
+                        {errors.email.message as string}
+                     </p>
+                  )}
+               </Grid>
+               <Grid xs={12} mb={2} gap={1}>
+                  <TextField
+                     fullWidth
+                     variant='standard'
+                     type='text'
+                     label='Phone'
+                     name='phoneNumber'
+                     placeholder='Enter your Phone number'
+                     {...register('phoneNumber')}
+                  />
+                  {errors.email && (
+                     <p className='text-sm text-red-500 color-red'>
+                        {errors.phoneNumber.message as string}
+                     </p>
+                  )}
+               </Grid>
+               <Grid xs={12} mb={2} gap={1}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                     <DemoItem label='Birthday'>
+                        <DatePicker
+                           onChange={(value: any) => setValue('birthdate', value.toISOString())}
+                           value={dayjs(watch('birthdate'))}
+                        />
+                     </DemoItem>
+                     {errors.requestDate && (
+                        <p className='text-sm text-red-500 color-red'>
+                           {errors.birthdate.message as string}
+                        </p>
+                     )}
+                  </LocalizationProvider>
+               </Grid>
+               <Grid xs={12} mb={2} gap={1}>
+                  <TextField
+                     fullWidth
+                     variant='standard'
+                     type='text'
+                     label='CCCD'
+                     name='cccd'
+                     placeholder='Enter your CCCD'
+                     {...register('cccd')}
+                  />
+                  {errors.email && (
+                     <p className='text-sm text-red-500 color-red'>
+                        {errors.cccd.message as string}
+                     </p>
+                  )}
+               </Grid>
+               <Grid xs={12} mb={2} gap={1}>
+                  <TextField
+                     fullWidth
+                     variant='standard'
+                     type='text'
+                     label='Họ Và Tên'
+                     name='fullname'
+                     placeholder='Enter your full name'
+                     {...register('fullname')}
+                  />
+                  {errors.email && (
+                     <p className='text-sm text-red-500 color-red'>
+                        {errors.fullname.message as string}
+                     </p>
+                  )}
+               </Grid>
+               <Grid xs={12} mb={2} gap={1}>
+                  <FormControl sx={{ minWidth: 450 }} {...register('gender')}>
+                     <InputLabel htmlFor='max-width'>Giới tính</InputLabel>
+                     <Select autoFocus {...register('gender')}>
+                        <MenuItem value={0}>Nam</MenuItem>
+                        <MenuItem value={1}>Nữ</MenuItem>
+                     </Select>
+                  </FormControl>
+                  {errors.email && (
+                     <p className='text-sm text-red-500 color-red'>
+                        {errors.gender.message as string}
+                     </p>
                   )}
                </Grid>
                <Grid xs={12} mb={2} gap={1}>
@@ -89,7 +189,9 @@ const RegisterPage = () => {
                      {...register('password')}
                   />
                   {errors.password && (
-                     <p className='text-sm text-red-500 color-red'>{errors.password.message}</p>
+                     <p className='text-sm text-red-500 color-red'>
+                        {errors.password.message as string}
+                     </p>
                   )}
                </Grid>
                <Grid xs={12} mb={2} gap={1}>
@@ -104,7 +206,7 @@ const RegisterPage = () => {
                   />
                   {errors.confirmPassword && (
                      <p className='text-sm text-red-500 color-red'>
-                        {errors.confirmPassword.message}
+                        {errors.confirmPassword.message as string}
                      </p>
                   )}
                </Grid>
