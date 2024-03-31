@@ -5,13 +5,19 @@ import { http } from 'src/utils';
 import { allColumns } from './allColumns';
 import { Button } from '@mui/material';
 import EditRequestForm from './EditRequestForm';
+import { ToastSuccess } from 'src/utils/toastOptions';
 
 const ListRegister: React.FC = () => {
    const { id } = useParams();
 
    const [listRegister, setListRegister] = useState([]);
    const [open, setOpen] = useState(false);
-   const [volunteer, setVolunteer] = useState({});
+   const [volunteer, setVolunteer] = useState<any>({});
+   const [quantity, setQuantity] = React.useState(volunteer?.quantity);
+   const [bloodTypeId, setBloodTypeId] = React.useState<any>(
+      (volunteer?.bloodtypes?.bloodtypeid as string) || null
+   );
+   const [isLoading, setIsLoading] = useState(false);
 
    //  TODO: change ID
    useEffect(() => {
@@ -20,16 +26,34 @@ const ListRegister: React.FC = () => {
       });
    }, [id]);
 
+   const onEditRegister = () => {
+      setIsLoading(true);
+      const body = {
+         registerId: volunteer?.registerId,
+         quantity: +quantity,
+         bloodtypeid: +bloodTypeId,
+      };
+      http
+         .put(`Hopital/updateregister`, body)
+         .then(res => {
+            setIsLoading(false);
+            setOpen(false);
+            window.location.reload();
+            ToastSuccess('Cập nhật thành công!');
+         })
+         .catch(err => {
+            setIsLoading(false);
+            console.log(err);
+         });
+   };
+
    const handleEditUserRequest = async (data: any) => {
       setVolunteer(data);
-      const body = {
-         registerId: data?.registerId,
-         quantity: 0,
-         bloodtypeid: 0,
-      };
-      http.post(`Hopital/updateregister`, body).then(res => {
-         setListRegister(res?.data?.data.registers || []);
-      });
+      setIsLoading(true);
+      setOpen(true);
+      setTimeout(() => {
+         setIsLoading(false);
+      }, 1000);
    };
 
    const table = useMaterialReactTable({
@@ -39,7 +63,6 @@ const ListRegister: React.FC = () => {
       enableSorting: false,
       renderRowActions: ({ row, cell }) => {
          const data = row.original;
-         console.log('🚀 ~ data:', data);
          return (
             <Button className='p-2' onClick={() => handleEditUserRequest(data)}>
                Chỉnh sửa
@@ -70,7 +93,12 @@ const ListRegister: React.FC = () => {
             volunteer={volunteer}
             open={open}
             setOpen={setOpen}
-            onEdit={handleEditUserRequest}
+            quantity={quantity}
+            setQuantity={setQuantity}
+            bloodTypeId={bloodTypeId}
+            setBloodTypeId={setBloodTypeId}
+            onEditRegister={onEditRegister}
+            isLoading={isLoading}
          />
       </>
    );
