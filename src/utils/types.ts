@@ -140,6 +140,11 @@ export enum RequestStatus {
    Reject = 2,
 }
 
+export enum NotificationStatus {
+   NOT_READ = 0,
+   READ = 1,
+}
+
 export type BloodTotalDTO = {
    numberbloodid: number;
    quantity: number;
@@ -150,4 +155,13 @@ export type ListBloodType = {
    bloodtypeid: number;
    nameBlood: string;
    totalBloodDTOs: BloodTotalDTO[];
+};
+
+export type Notification = {
+   notificationId: number;
+   userid: number;
+   content: string;
+   datepost: string;
+   status: number;
+   users: any[] | null; // Sử dụng any[] nếu users có thể là một mảng các đối tượng cụ thể
 };

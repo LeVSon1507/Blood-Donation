@@ -1,7 +1,7 @@
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { http } from 'src/utils';
+import { getCurrentUser, http } from 'src/utils';
 import { allColumns } from './allColumns';
 import { Button } from '@mui/material';
 import EditRequestForm from './EditRequestForm';
@@ -17,13 +17,14 @@ const ListRegister: React.FC = () => {
    const [bloodTypeId, setBloodTypeId] = React.useState<any>(
       (volunteer?.bloodtypes?.bloodtypeid as string) || null
    );
+   const currentUser = getCurrentUser();
    const [isLoading, setIsLoading] = useState(false);
 
-   //  TODO: change ID
    useEffect(() => {
-      http.get(`Hopital/listvolunteerregister?id=${'2'}`).then(res => {
-         setListRegister(res?.data?.data.registers || []);
+      http.get(`Hopital/listvolunteerregister?id=${currentUser?.userId}`).then(res => {
+         setListRegister(res?.data?.data?.registers || []);
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [id]);
 
    const onEditRegister = () => {

@@ -11,14 +11,16 @@ import {
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import DrawerItem from '../../container/LandingView/DrawerItem';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, Menu, MenuItem, Divider, ListItemIcon } from '@mui/material';
 import './Header.scss';
 import logo1 from 'src/assets/images/undraw_doctors_p6aq.svg';
 import { url_img } from '../../utils/const';
 import DialogCommon from '../DialogCommon/DialogCommon';
-import { Role } from 'src/utils';
+import { Role, getCurrentUser, http } from 'src/utils';
 import { IoMenu } from 'react-icons/io5';
+import { MdNotificationsActive } from 'react-icons/md';
+import NotificationList from './Notification';
 
 const StyledToolbar = styled(Toolbar)({
    display: 'flex',
@@ -67,8 +69,33 @@ const Navbar = props => {
    const navigate = useNavigate();
    const [anchorEl, setAnchorEl] = useState<boolean>(false);
    const [open, setOpen] = useState<boolean>(false);
-   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+   const currentUser = getCurrentUser();
    const [showBtn, setShowBtn] = useState<boolean>(false);
+   const [showNotification, setShowNotification] = useState<boolean>(false);
+   const [notificationCount, setNotificationCount] = useState<number>(0);
+   console.log('🚀 ~ Navbar ~ notificationCount:', notificationCount);
+   const [notificationList, setNotificationList] = useState<Notification[]>([]);
+   console.log('🚀 ~ Navbar ~ notificationList:', notificationList);
+
+   useEffect(() => {
+      http
+         .get(`volunteer/notification?id=${currentUser?.userId}`)
+         .then(res => {
+            setNotificationList(res?.data?.data || []);
+         })
+         .catch(err => {
+            console.log(err);
+         });
+      http
+         .get(`volunteer/countnotification?id=${currentUser?.userId}`)
+         .then(res => {
+            setNotificationCount(res?.data?.data || 0);
+         })
+         .catch(err => {
+            console.log(err);
+         });
+   }, [currentUser?.userId]);
+
    const isRoleAdmin =
       currentUser?.role === Role.Admin ||
       currentUser?.role === Role.BloodBank ||
@@ -189,6 +216,7 @@ const Navbar = props => {
                   >
                      <IoMenu size={30} />
                   </Box>
+
                   {isLogin && <Button onClick={handleLoginLogout}>{'Đăng Xuất'}</Button>}
                   <DialogCommon
                      content='Bạn có muốn đăng xuất không?'
@@ -245,9 +273,30 @@ const Navbar = props => {
                         </ListItemIcon>
                         Menu
                      </MenuItem>
+                     {isLogin && (
+                        <MenuItem
+                           onClick={() => {
+                              handleClose();
+                              setShowNotification(prev => !prev);
+                           }}
+                        >
+                           <ListItemIcon>
+                              <MdNotificationsActive
+                                 size={26}
+                                 color={notificationCount !== 0 ? 'orange' : ''}
+                              />
+                           </ListItemIcon>
+                           Notification ({notificationCount})
+                        </MenuItem>
+                     )}
                   </Menu>
                </Box>
             )}
+            <NotificationList
+               open={showNotification}
+               setOpen={setShowNotification}
+               data={notificationList}
+            />
          </StyledToolbar>
       </AppBar>
    );
