@@ -6,6 +6,7 @@ import { allColumns } from './allColumns';
 import { Button } from '@mui/material';
 import EditRequestForm from './EditRequestForm';
 import { ToastSuccess } from 'src/utils/toastOptions';
+import LoadingCommon from 'src/components/LoadingCircle';
 
 const ListRegister: React.FC = () => {
    const { id } = useParams();
@@ -82,6 +83,8 @@ const ListRegister: React.FC = () => {
          },
       },
    });
+
+   if (isLoading) return <LoadingCommon additionalClass='h-[100vh]' />;
 
    return (
       <>

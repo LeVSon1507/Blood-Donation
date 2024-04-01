@@ -73,9 +73,8 @@ const Navbar = props => {
    const [showBtn, setShowBtn] = useState<boolean>(false);
    const [showNotification, setShowNotification] = useState<boolean>(false);
    const [notificationCount, setNotificationCount] = useState<number>(0);
-   console.log('🚀 ~ Navbar ~ notificationCount:', notificationCount);
    const [notificationList, setNotificationList] = useState<Notification[]>([]);
-   console.log('🚀 ~ Navbar ~ notificationList:', notificationList);
+   const [maskRead, setMaskRead] = useState<boolean>(false);
 
    useEffect(() => {
       http
@@ -94,7 +93,7 @@ const Navbar = props => {
          .catch(err => {
             console.log(err);
          });
-   }, [currentUser?.userId]);
+   }, [currentUser?.userId, maskRead]);
 
    const isRoleAdmin =
       currentUser?.role === Role.Admin ||
@@ -295,6 +294,8 @@ const Navbar = props => {
             <NotificationList
                open={showNotification}
                setOpen={setShowNotification}
+               maskRead={maskRead}
+               setMaskRead={setMaskRead}
                data={notificationList}
             />
          </StyledToolbar>

@@ -20,7 +20,7 @@ import {
    isEmpty,
 } from 'src/utils';
 
-const NotificationList = ({ open, setOpen, data }) => {
+const NotificationList = ({ open, setOpen, data,setMaskRead, maskRead }) => {
    const [isLoading, setIsLoading] = React.useState<boolean>(false);
    const currentUser = getCurrentUser();
    const handleClose = () => {
@@ -30,9 +30,10 @@ const NotificationList = ({ open, setOpen, data }) => {
    const handleMaskRead = () => {
       setIsLoading(true);
       http
-         .post(`volunteer/updatestatusnotification?userid=${currentUser.userId}`, null)
+         .put(`volunteer/updatestatusnotification?userid=${currentUser.userId}`, null)
          .then(res => {
             setIsLoading(false);
+            setMaskRead(true);
          })
          .catch(err => {
             setIsLoading(false);
