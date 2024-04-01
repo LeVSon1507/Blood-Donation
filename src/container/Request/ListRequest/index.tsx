@@ -7,6 +7,7 @@ import { useAuth } from 'src/context';
 import { getCurrentUser, http, PRIMARY_COLOR, Role } from 'src/utils';
 import { allColumns } from './allColumns';
 import StatusModal from './StatusModal';
+import { ToastError } from 'src/utils/toastOptions';
 
 const ListRequest: React.FC = () => {
    const { user } = useAuth();
@@ -94,7 +95,14 @@ const ListRequest: React.FC = () => {
          <MenuItem key='delete' onClick={() => handleDeleteRequest(row?.original)}>
             Xóa
          </MenuItem>,
-         <MenuItem key='status' onClick={() => handleChangeStatus(row?.original)}>
+         <MenuItem
+            key='status'
+            onClick={
+               currentUser?.role === Role.BloodBank
+                  ? () => handleChangeStatus(row?.original)
+                  : () => ToastError('Tài khoản bạn không có quyền!')
+            }
+         >
             Thay Đổi Trạng Thái
          </MenuItem>,
       ],
