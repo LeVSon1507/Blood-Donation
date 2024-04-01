@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { schema } from './helpers';
-import { RE_CAPTCHA_SITE_KEY, http } from 'src/utils';
+import { RE_CAPTCHA_SITE_KEY, http, isEmpty } from 'src/utils';
 import {
    FormControl,
    Grid,
@@ -21,9 +21,11 @@ import dayjs from 'dayjs';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import LoadingCommon from 'src/components/LoadingCircle';
 
 const RegisterPage = () => {
    const navigate = useNavigate();
+   const [isLoading, setIsLoading] = React.useState(false);
 
    const {
       handleSubmit,
@@ -42,20 +44,24 @@ const RegisterPage = () => {
          cccd: '',
          fullname: '',
          user: '',
-         birthdate: dayjs(),
+         birthdate: '',
          gender: 0,
       },
    });
 
    const onSubmit = data => {
+      setIsLoading(true);
       http
          .post('user/register', data)
          .then(res => {
             navigate('/login');
+            setIsLoading(false);
+
             toast.success('Register Successfully');
          })
          .catch(err => {
             console.log(err);
+            setIsLoading(false);
             toast.error(err?.data?.errorDetails);
          });
    };
@@ -66,7 +72,9 @@ const RegisterPage = () => {
       setIsDisable(false);
    };
 
-   return (
+   return isLoading ? (
+      <LoadingCommon additionalClass='h-[100vh]' />
+   ) : (
       <div className='minH-[100vh] h-[100vh] w-[100%]  pt-10'>
          <div className='max-w-[1000px] mx-auto px-5'>
             <div className='flex flex-col justify-center items-center'>
@@ -97,7 +105,7 @@ const RegisterPage = () => {
                   />
                   {errors.email && (
                      <p className='text-sm text-red-500 color-red'>
-                        {errors.email.message as string}
+                        {errors?.email?.message as string}
                      </p>
                   )}
                </Grid>
@@ -106,32 +114,18 @@ const RegisterPage = () => {
                      fullWidth
                      variant='standard'
                      type='text'
-                     label='Phone'
+                     label='SĐT'
                      name='phoneNumber'
                      placeholder='Enter your Phone number'
                      {...register('phoneNumber')}
                   />
                   {errors.email && (
                      <p className='text-sm text-red-500 color-red'>
-                        {errors.phoneNumber.message as string}
+                        {errors?.phoneNumber?.message as string}
                      </p>
                   )}
                </Grid>
-               <Grid xs={12} mb={2} gap={1}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                     <DemoItem label='Birthday'>
-                        <DatePicker
-                           onChange={(value: any) => setValue('birthdate', value.toISOString())}
-                           value={dayjs(watch('birthdate'))}
-                        />
-                     </DemoItem>
-                     {errors.requestDate && (
-                        <p className='text-sm text-red-500 color-red'>
-                           {errors.birthdate.message as string}
-                        </p>
-                     )}
-                  </LocalizationProvider>
-               </Grid>
+
                <Grid xs={12} mb={2} gap={1}>
                   <TextField
                      fullWidth
@@ -144,7 +138,7 @@ const RegisterPage = () => {
                   />
                   {errors.email && (
                      <p className='text-sm text-red-500 color-red'>
-                        {errors.cccd.message as string}
+                        {errors?.cccd?.message as string}
                      </p>
                   )}
                </Grid>
@@ -160,23 +154,38 @@ const RegisterPage = () => {
                   />
                   {errors.email && (
                      <p className='text-sm text-red-500 color-red'>
-                        {errors.fullname.message as string}
+                        {errors?.fullname?.message as string}
                      </p>
                   )}
                </Grid>
                <Grid xs={12} mb={2} gap={1}>
                   <FormControl sx={{ minWidth: 450 }} {...register('gender')}>
                      <InputLabel htmlFor='max-width'>Giới tính</InputLabel>
-                     <Select autoFocus {...register('gender')}>
+                     <Select value={watch('gender')} autoFocus {...register('gender')}>
                         <MenuItem value={0}>Nam</MenuItem>
                         <MenuItem value={1}>Nữ</MenuItem>
                      </Select>
                   </FormControl>
-                  {errors.email && (
+                  {errors.gender && (
                      <p className='text-sm text-red-500 color-red'>
-                        {errors.gender.message as string}
+                        {errors?.gender?.message as string}
                      </p>
                   )}
+               </Grid>
+               <Grid xs={6} mb={2} gap={1}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                     <DemoItem label='Ngày sinh'>
+                        <DatePicker
+                           onChange={(value: any) => setValue('birthdate', value.toISOString())}
+                           value={dayjs(watch('birthdate'))}
+                        />
+                     </DemoItem>
+                     {isEmpty(watch('birthdate')) && (
+                        <p className='text-sm text-red-500 color-red'>
+                           {errors?.birthdate?.message as string}
+                        </p>
+                     )}
+                  </LocalizationProvider>
                </Grid>
                <Grid xs={12} mb={2} gap={1}>
                   <TextField
@@ -190,7 +199,7 @@ const RegisterPage = () => {
                   />
                   {errors.password && (
                      <p className='text-sm text-red-500 color-red'>
-                        {errors.password.message as string}
+                        {errors?.password?.message as string}
                      </p>
                   )}
                </Grid>
@@ -206,7 +215,7 @@ const RegisterPage = () => {
                   />
                   {errors.confirmPassword && (
                      <p className='text-sm text-red-500 color-red'>
-                        {errors.confirmPassword.message as string}
+                        {errors?.confirmPassword?.message as string}
                      </p>
                   )}
                </Grid>
@@ -219,9 +228,9 @@ const RegisterPage = () => {
                   </Button>
                </div>
                <div className='text-sm justify-center flex text-grayCustom'>
-                  <span className='inline-block mr-1'>Already have an account? </span>
+                  <span className='inline-block mr-1'>Đã có tài khoản?</span>
                   <NavLink to={'/login'} className='font-semibold cursor-pointer'>
-                     Sign in
+                     Đăng Nhập
                   </NavLink>
                </div>
             </form>

@@ -1,14 +1,14 @@
-import * as yup from "yup";
+import * as yup from 'yup';
 
 export const schema = yup
-  .object({
-    email: yup
-      .string()
-      .email("Please enter valid email address")
-      .required("Please enter your email address"),
-    password: yup
-      .string()
-      .min(2, "Your password must be at least 8 characters or greater")
-      .required("Please enter your password"),
-  })
-  .required();
+   .object({
+      email: yup
+         .string()
+         .email('Vui lòng nhập địa chỉ email hợp lệ')
+         .required('Vui lòng nhập địa chỉ email của bạn'),
+      password: yup
+         .string()
+         .min(2, 'Mật khẩu của bạn phải chứa ít nhất 8 ký tự')
+         .required('Vui lòng nhập mật khẩu của bạn'),
+   })
+   .required();
