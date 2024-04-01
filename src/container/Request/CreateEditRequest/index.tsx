@@ -12,12 +12,13 @@ import {
 } from 'src/utils';
 import Button from 'src/components/Button';
 import { toast } from 'react-toastify';
-import { esES, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import dayjs, { Dayjs } from 'dayjs';
 import { useParams } from 'react-router-dom';
+import LoadingCommon from 'src/components/LoadingCircle';
 
 type Props = {};
 
@@ -135,7 +136,9 @@ const CreateEditRequest: React.FC<Props> = () => {
       setListWards(getListWardsByDistrictCode(watchDistrict));
    }, [watchDistrict, setValue]);
 
-   return (
+   return isLoading ? (
+      <LoadingCommon additionalClass='h-[100vh]' />
+   ) : (
       <LocalizationProvider dateAdapter={AdapterDayjs}>
          <div className='w-full px-8 pt-6'>
             <h2>{!!id ? 'Cập Nhật Yêu Cầu' : 'Thêm Yêu Cầu'}</h2>
