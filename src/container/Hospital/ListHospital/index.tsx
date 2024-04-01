@@ -26,8 +26,10 @@ const ListHospital: React.FC = () => {
       }
    }, [currentUser?.role, currentUser?.userId]);
 
+   const isAdmin = currentUser?.role === Role.Admin;
+
    const handleAddHospital = () => {
-      if (currentUser?.role === Role.Admin) {
+      if (isAdmin) {
          navigate('/manage/blood-bank');
       } else {
          navigate('/manage/create-hospitals');
@@ -35,7 +37,7 @@ const ListHospital: React.FC = () => {
    };
 
    const table = useMaterialReactTable({
-      columns: allColumns,
+      columns: allColumns(isAdmin),
       data: listHospitals,
       enableRowPinning: false,
       enableSorting: false,
@@ -54,11 +56,7 @@ const ListHospital: React.FC = () => {
       <div className='ml-4'>
          <div className='w-full flex flew-row justify-between items-center'>
             <Typography variant='h4' color={PRIMARY_COLOR} mb={2}>
-               {currentUser?.role === Role.Admin
-                  ? 'Danh sách ngân hàng máu'
-                  : currentUser?.role === Role.Hospital
-                  ? 'Danh sách bệnh viện'
-                  : ''}
+               {isAdmin ? 'Danh sách ngân hàng máu' : 'Danh sách bệnh viện'}
             </Typography>
             <Button onClick={handleAddHospital}>Tạo</Button>
          </div>
