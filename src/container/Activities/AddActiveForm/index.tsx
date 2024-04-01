@@ -13,7 +13,7 @@ import { ToastInfo, ToastSuccess } from 'src/utils/toastOptions';
 
 function AddActiveForm() {
    const currentUser = getCurrentUser();
-   const isAdmin = currentUser.role === Role.Admin;
+   const isAdmin = currentUser?.role === Role.Admin;
 
    const {
       watch,

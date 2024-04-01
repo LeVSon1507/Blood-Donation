@@ -72,7 +72,7 @@ const ListActivities = () => {
                               key={item?.activateid}
                               className='w-full border border-gray-300 p-4 mt-2 rounded'
                            >
-                              {currentUser.role === Role.Admin && (
+                              {currentUser?.role === Role.Admin && (
                                  <Button
                                     variant='outlined'
                                     onClick={() => handleDeleteActive(item?.activateid)}
