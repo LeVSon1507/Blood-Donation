@@ -21,6 +21,7 @@ import ListRequest from './container/Request/ListRequest';
 import CreateEditRequest from './container/Request/CreateEditRequest';
 import RequestDetail from './container/Request/RequestDetail';
 import ListBloodInBloodBank from './container/Bloodbank';
+import AddActiveForm from './container/Activities/AddActiveForm';
 
 function App() {
    const renderBaseComponents = (element: React.ReactNode) => {
@@ -109,6 +110,10 @@ function App() {
             {
                path: '/manage/list-blood',
                element: <ListBloodInBloodBank />,
+            },
+            {
+               path: '/manage/create-activities',
+               element: <AddActiveForm />,
             },
          ],
       },

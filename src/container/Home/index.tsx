@@ -13,6 +13,7 @@ import Gallery from '../LandingView/about/gallery';
 import NoResult from './NoResult';
 import HaveResult from './HaveResult';
 import CheckboxFindInCity from '../CheckboxFindInCity';
+import ListActivities from '../Activities/ListActivities';
 
 function HomePage() {
    const [startEndDate, setStartEndDate] = React.useState<DateRange<Dayjs>>([null, null]);
@@ -101,6 +102,8 @@ function HomePage() {
                   <Standard />
                   <div className='w-full h-[2px] bg-black mb-64' />
                   <Note />
+                  <div className='w-full h-[2px] bg-black mt-6 mb-6' />
+                  <ListActivities />
                </>
             </>
          )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdBloodtype, MdOutlineMapsHomeWork } from 'react-icons/md';
+import { MdBloodtype, MdOutlineMapsHomeWork, MdOutlineVolunteerActivism } from 'react-icons/md';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { MdOutlineBusinessCenter } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
@@ -35,6 +35,12 @@ const Sidebar = () => {
          title: 'Kho Máu',
          path: '/manage/list-blood',
          isDisplay: isManager || isHospital,
+      },
+      {
+         icon: <MdOutlineVolunteerActivism />,
+         title: 'Hoạt động',
+         path: '/manage/create-activities',
+         isDisplay: isAdmin,
       },
    ];
 
