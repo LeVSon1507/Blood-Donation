@@ -1,15 +1,9 @@
 import React from 'react';
 import './standard.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Standard() {
    return (
       <div>
-         <link
-            href='https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'
-            rel='stylesheet'
-         />
-
          <section className='section services-section' id='services'>
             <div className='container'>
                <div className='row'>

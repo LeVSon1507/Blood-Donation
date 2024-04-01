@@ -77,6 +77,7 @@ const Navbar = props => {
    const [maskRead, setMaskRead] = useState<boolean>(false);
 
    useEffect(() => {
+      if (!showNotification && !anchorEl) return;
       http
          .get(`volunteer/notification?id=${currentUser?.userId}`)
          .then(res => {
@@ -93,7 +94,7 @@ const Navbar = props => {
          .catch(err => {
             console.log(err);
          });
-   }, [currentUser?.userId, maskRead]);
+   }, [anchorEl, currentUser?.userId, maskRead, showNotification]);
 
    const isRoleAdmin =
       currentUser?.role === Role.Admin ||

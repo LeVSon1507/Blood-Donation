@@ -9,7 +9,6 @@ import Login from './container/Login';
 import RegisterPage from './container/Register';
 import ErrorPage from './components/ErrorPage';
 import ContactUs from './container/ContactUs';
-import { AuthProvider } from './context';
 import News from './container/News';
 import ManageLayout from './components/ManageLayout';
 import CreateEditHospital from './container/Hospital/CreateEditHospital';
@@ -123,11 +122,7 @@ function App() {
       },
    ]);
 
-   return (
-      <AuthProvider>
-         <RouterProvider router={router} />
-      </AuthProvider>
-   );
+   return <RouterProvider router={router} />;
 }
 
 export default App;
