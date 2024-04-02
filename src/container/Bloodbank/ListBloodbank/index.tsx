@@ -1,25 +1,27 @@
 import { Typography } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from 'src/context';
 import { BloodTotalDTO, getCurrentUser, http, ListBloodType, PRIMARY_COLOR } from 'src/utils';
 import { allColumns } from './allColumns';
 import Button from 'src/components/Button';
 import RequestBloodForm from '../RequestBloodForm';
-import { ToastError } from 'src/utils/toastOptions';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import dayjs from 'dayjs';
 
-type QuantityTake = {
+export type QuantityTake = {
    numberbloodid: number;
    quantity: number;
 };
 
 const ListBlood: React.FC = () => {
    const { user } = useAuth();
-   let bloodTypeId;
+   const bloodTypeId = useRef<number>();
    const currentUser = user?.userId ? user : getCurrentUser();
 
    const [listBlood, setListBlood] = useState<ListBloodType[]>([]);
    const [open, setOpen] = useState(false);
+   const [isLoading, setIsLoading] = useState(false);
    const [totalBloodOfType, setTotalBloodOfType] = useState<BloodTotalDTO>();
    const [quantityTake, setQuantityTake] = React.useState<QuantityTake[]>([]);
 
@@ -27,20 +29,28 @@ const ListBlood: React.FC = () => {
       http.get(`Hopital/displaysremainingblood?id=${currentUser?.userId}`).then(res => {
          setListBlood(res?.data?.data);
       });
-   }, [currentUser?.userId]);
+   }, [currentUser?.userId, quantityTake]);
 
    const onRequestBlood = async () => {
-      ToastError('Đang trong quá trình phát triển, xin lỗi vì sự bất tiện này!');
-      // const body = {
-      //    hospitalid: currentUser?.userId,
-      //    datetake: dayjs(),
-      //    bloodtypeid: bloodTypeId,
-      //    quantityTake: quantityTake,
-      // };
-
-      // http.post(`Hopital/addtakeblood`, body).then(res => {
-      //    setListBlood(res?.data?.data);
-      // });
+      const body = {
+         hospitalid: currentUser?.userId,
+         datetake: dayjs(),
+         bloodtypeid: bloodTypeId.current,
+         quantityTake: quantityTake,
+      };
+      setIsLoading(true);
+      http
+         .post(`Hopital/addtakeblood`, body)
+         .then(res => {
+            ToastSuccess(res?.data?.message ?? 'Yêu cầu gửi thành công!');
+            setOpen(false);
+            setQuantityTake([]);
+            setIsLoading(false);
+         })
+         .catch(err => {
+            ToastError('Không gửi được yêu cầu!');
+            setIsLoading(false);
+         });
    };
 
    const handleAddBlood = () => {
@@ -48,7 +58,7 @@ const ListBlood: React.FC = () => {
    };
 
    const handleRequestBlood = (id: number, totalBloodDTOs: any) => {
-      if (bloodTypeId) bloodTypeId = id;
+      bloodTypeId.current = id;
       setTotalBloodOfType(totalBloodDTOs);
       setOpen(true);
    };
@@ -81,6 +91,7 @@ const ListBlood: React.FC = () => {
          <RequestBloodForm
             data={totalBloodOfType}
             setOpen={setOpen}
+            isLoading={isLoading}
             open={open}
             setQuantityTake={setQuantityTake}
             quantityTake={quantityTake}

@@ -20,7 +20,7 @@ import {
    isEmpty,
 } from 'src/utils';
 
-const NotificationList = ({ open, setOpen, data,setMaskRead, maskRead }) => {
+const NotificationList = ({ open, setOpen, data, setMaskRead, maskRead }) => {
    const [isLoading, setIsLoading] = React.useState<boolean>(false);
    const currentUser = getCurrentUser();
    const handleClose = () => {
@@ -41,8 +41,6 @@ const NotificationList = ({ open, setOpen, data,setMaskRead, maskRead }) => {
          });
    };
 
-   if (isLoading) return <LoadingCommon />;
-
    return (
       <Dialog maxWidth='sm' fullWidth sx={{}} open={open} onClose={handleClose}>
          <Box className='d-flex justify-content-between align-items-center'>
@@ -58,33 +56,38 @@ const NotificationList = ({ open, setOpen, data,setMaskRead, maskRead }) => {
                </Button>
             )}
          </Box>
-         <DialogContent>
-            {!isEmpty(data) ? (
-               data?.map((item, index) => {
-                  return (
-                     <Box key={index} className='my-2 border p-2 rounded'>
-                        <p className='my-1'> Thời gian : {formatDateTime(item?.datepost)}</p>
-                        <Typography variant='body2' className='my-2'>
-                           {item?.content}
-                        </Typography>
-                        <div className='mt-auto'>
-                           <Chip
-                              label={
-                                 item?.status === NotificationStatus.READ ? 'Đã đọc' : 'Chưa đọc'
-                              }
-                              color={
-                                 item?.status === NotificationStatus.READ ? 'success' : 'warning'
-                              }
-                           />
-                        </div>
-                        <Divider className='my-2' />
-                     </Box>
-                  );
-               })
-            ) : (
-               <p className='text-center'>Không có thông báo mới🙂</p>
-            )}
-         </DialogContent>
+         {isLoading ? (
+            <LoadingCommon />
+         ) : (
+            <DialogContent>
+               {!isEmpty(data) ? (
+                  data?.map((item, index) => {
+                     return (
+                        <Box key={index} className='my-2 border p-2 rounded'>
+                           <p className='my-1'> Thời gian : {formatDateTime(item?.datepost)}</p>
+                           <Typography variant='body2' className='my-2'>
+                              {item?.content}
+                           </Typography>
+                           <div className='mt-auto'>
+                              <Chip
+                                 label={
+                                    item?.status === NotificationStatus.READ ? 'Đã đọc' : 'Chưa đọc'
+                                 }
+                                 color={
+                                    item?.status === NotificationStatus.READ ? 'success' : 'warning'
+                                 }
+                              />
+                           </div>
+                           <Divider className='my-2' />
+                        </Box>
+                     );
+                  })
+               ) : (
+                  <p className='text-center'>Không có thông báo mới🙂</p>
+               )}
+            </DialogContent>
+         )}
+
          <DialogActions>
             <Button onClick={handleClose}>Đóng</Button>
          </DialogActions>
