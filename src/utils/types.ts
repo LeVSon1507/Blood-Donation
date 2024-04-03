@@ -83,6 +83,8 @@ export interface User {
    volunteers?: Volunteer;
    hospitals?: Hospital;
    bloodbank?: any;
+   nameHospital?: string;
+   nameBloodbank?: string;
    notifications?: any[];
 }
 
