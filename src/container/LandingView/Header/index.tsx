@@ -3,8 +3,10 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 //img
 import blood from 'src/assets/images/undraw_doctor_kw-5-l.svg';
+import { getCurrentUser, Role } from 'src/utils';
 
 const Header = () => {
+   const currentUser = getCurrentUser();
    const navigate = useNavigate();
    const CustomBox = styled(Box)(({ theme }) => ({
       minHeight: '80vh',
@@ -80,9 +82,18 @@ const Header = () => {
                         backgroundColor: '#343a55',
                      },
                   }}
-                  onClick={() => navigate('/login')}
+                  onClick={
+                     !currentUser?.userId ? () => navigate('/login') : () => navigate('/home')
+                  }
                >
-                  Đến với chúng tôi
+                  {currentUser?.role === Role.Admin
+                     ? 'Hi Admin'
+                     : currentUser?.role === Role.Hospital
+                     ? 'Hi Bệnh Viện ' + currentUser?.nameHospital
+                     : currentUser?.role === Role.BloodBank
+                     ? 'Hi Kho Máu ' + currentUser?.nameBloodbank
+                     : 'Hi Tình Nguyện Viên ' + currentUser?.fullname}
+                  {!currentUser?.userId && 'Đến với chúng tôi'}
                </Button>
                <Button
                   component={Link}

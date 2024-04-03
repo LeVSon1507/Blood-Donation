@@ -1,4 +1,3 @@
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { SearchRequest, isEmpty, useScrollTop } from 'src/utils';
 import Button from 'src/components/Button';
