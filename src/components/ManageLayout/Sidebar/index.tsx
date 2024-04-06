@@ -14,7 +14,7 @@ const Sidebar = () => {
    const items = [
       {
          icon: <MdOutlineMapsHomeWork />,
-         title: 'Bệnh Viện',
+         title: isAdmin ? 'Ngân hàng máu' : 'Bệnh Viện',
          path: isHospital ? `/manage/hospitals/${currentUser?.userId}` : '/manage/hospitals',
          isDisplay: isManager || isHospital || isAdmin,
       },

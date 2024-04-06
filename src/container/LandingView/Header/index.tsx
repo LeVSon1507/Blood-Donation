@@ -89,10 +89,10 @@ const Header = () => {
                   {currentUser?.role === Role.Admin
                      ? 'Hi Admin'
                      : currentUser?.role === Role.Hospital
-                     ? 'Hi Bệnh Viện ' + currentUser?.nameHospital
+                     ? 'Hi Bệnh Viện'
                      : currentUser?.role === Role.BloodBank
-                     ? 'Hi Kho Máu ' + currentUser?.nameBloodbank
-                     : 'Hi Tình Nguyện Viên ' + currentUser?.fullname}
+                     ? 'Hi Kho Máu'
+                     : 'Hi Tình Nguyện Viên'}
                   {!currentUser?.userId && 'Đến với chúng tôi'}
                </Button>
                <Button

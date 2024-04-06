@@ -43,24 +43,21 @@ function RequestItem({ data }: { data: SearchRequest }) {
 
    useEffect(() => {
       axios
-         .get<{ data: string }>(
-            `${API_KEY}/volunteer/checkregister?id=${localStorage.getItem('userId')}`,
-            {
-               headers: {
-                  Authorization: `Bearer ${token}`,
-               },
-            }
-         )
+         .get<{ data: string }>(`${API_KEY}/volunteer/checkregister?id=${currentUser?.userId}`, {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+         })
          .then(res => setResult(res?.data?.data))
          .catch(err => {
             console.log(err?.message);
          });
-   }, []);
+   }, [currentUser?.userId]);
 
    const [open, setOpen] = useState<boolean>(false);
 
    const onConfirm = () => {
-      result !== 0 ? ToastError(NOT_VALID_REGISTER_MESSAGE) : setOpen(true);
+      result === 0 ? ToastError(NOT_VALID_REGISTER_MESSAGE) : setOpen(true);
    };
 
    const handleRegister = () => {
@@ -81,26 +78,21 @@ function RequestItem({ data }: { data: SearchRequest }) {
       if (dataRequestDate?.isValid()) {
          if (today?.isAfter(dataRequestDate)) {
             return ToastError('Ngày hiện tại lớn hơn ngày tổ chức hiến máu');
-         } else if (today?.isBefore(dataRequestDate)) {
-            return ToastError('Ngày tổ chức hiến máu lớn hơn ngày hiện tại');
-         } else {
-            return true;
          }
-      } else {
-         return ToastError('Khoảng thời gian của buổi hiến máu không hợp lệ!');
+         return true;
       }
+      return ToastError('Khoảng thời gian của buổi hiến máu không hợp lệ!');
    };
 
    const handleYes = async () => {
       if (!isLogin) return navigate('/login');
 
-      if (result !== 0) {
+      if (result === 0) {
          return ToastError(NOT_VALID_REGISTER_MESSAGE);
       }
 
       if (!handleCheckDay()) {
-         setOpen(false);
-         return;
+         return setOpen(false);
       }
 
       setIsLoading(true);
@@ -134,10 +126,6 @@ function RequestItem({ data }: { data: SearchRequest }) {
 
    return (
       <div>
-         <link
-            href='https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css'
-            rel='stylesheet'
-         />
          <div className='container'>
             <div className='row'>
                <div className='col-lg-12'>
