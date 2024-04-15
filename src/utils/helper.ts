@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import _ from 'lodash';
 import { useEffect } from 'react';
 import { User } from './types';
-import { ToastError } from './toastOptions';
 import { getDistrictByCode, getProvinceByCode, getWardByCode } from './Address';
 import { isEmpty } from './const';
 
@@ -40,33 +39,7 @@ export const formatDateUserInfor = (value: string, format: string = 'YYYY-MM-DD'
 
    return dayjs(value).format(format);
 };
-const isImage = ['png', 'jpg', 'svg', 'webp', 'jpeg'];
 
-export const handleImageUpload = (image, setImageUrl, isPost: boolean) => {
-   const data = new FormData();
-   for (let i = 0; i < image.length; i++) {
-      const fileExtension = image[i].name.split('.').pop().toLowerCase();
-      if (isImage.includes(`${fileExtension}`)) {
-         data.append('file', image[i]);
-         data.append('upload_preset', `image_giotmauhong`);
-         data.append('cloud_name', 'lvson');
-         fetch('https://api.cloudinary.com/v1_1/lvson/image/upload', {
-            method: 'post',
-            body: data,
-         })
-            .then(res => res.json())
-            .then(data => {
-               setImageUrl(data?.url);
-            })
-            .catch(err => {
-               console.log(err);
-            });
-      } else {
-         setImageUrl('err');
-         ToastError(`Invalid file extension: ${fileExtension}`);
-      }
-   }
-};
 export const formatTime = (time: string) => {
    const currentTime = new Date();
    const preTime = new Date(time);

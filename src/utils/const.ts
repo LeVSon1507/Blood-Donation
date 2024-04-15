@@ -1,6 +1,6 @@
-//TODO: import image local
 import dayjs from 'dayjs';
 import _ from 'lodash';
+import { ToastError } from './toastOptions';
 
 export const url_img =
    'https://www.clevelanddentalhc.com/wp-content/uploads/2018/03/sample-avatar.jpg';
@@ -8,6 +8,34 @@ export const url_img =
 export const article_endpoint = `https://newsdata.io/api/1/news?apikey=pub_4058515151c616834f37ed50f02107c4e64cf&country=vi&language=vi&category=health`;
 
 export const token = localStorage.getItem('token');
+
+const isImage = ['png', 'jpg', 'svg', 'webp', 'jpeg'];
+
+export const handleImageUpload = (image, setImageUrl) => {
+   const data = new FormData();
+   for (let i = 0; i < image?.length; i++) {
+      const fileExtension = image[i].name.split('.').pop().toLowerCase();
+      if (isImage.includes(`${fileExtension}`)) {
+         data.append('file', image[i]);
+         data.append('upload_preset', `upload`);
+         data.append('cloud_name', 'lvson');
+         fetch('https://api.cloudinary.com/v1_1/lvson/image/upload', {
+            method: 'post',
+            body: data,
+         })
+            .then(res => res.json())
+            .then(data => {
+               setImageUrl(data?.url);
+            })
+            .catch(err => {
+               console.log(err);
+            });
+      } else {
+         setImageUrl('err');
+         ToastError(`Invalid file extension: ${fileExtension}`);
+      }
+   }
+};
 
 export const isEmpty = (value: any): boolean =>
    value instanceof Date

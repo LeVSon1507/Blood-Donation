@@ -13,6 +13,7 @@ import {
    PRIMARY_COLOR,
    Role,
    User,
+   formatDate,
    getAllProvinces,
    getDistrictByCode,
    getListDistrictsByProvinceCode,
@@ -38,6 +39,7 @@ import {
    MenuItem,
    Select,
    TextField,
+   Tooltip,
 } from '@mui/material';
 import { FormikProps, useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -45,6 +47,7 @@ import { ToastSuccess } from 'src/utils/toastOptions';
 import './styles.scss';
 import DialogCommon from 'src/components/DialogCommon/DialogCommon';
 import ava_default from 'src/assets/images/undraw_medicine_b-1-ol.svg';
+import ImageUpload from 'src/components/ImageUpload/ImageUpload';
 
 const commonValidation = {
    email: Yup.string().nullable().required('Email là bắt buộc'),
@@ -93,6 +96,10 @@ const EditProfile = (props: Props) => {
    const isHospital = currentUser?.role === Role.Hospital;
    const isVolunteer = currentUser?.role === Role.Volunteer;
    const isBloodBank = currentUser?.role === Role.BloodBank;
+   const [imageUrl, setImageUrl] = React.useState<any>(currentUser?.img);
+   const [isOpenModalCrop, setIsOpenModalCrop] = React.useState(false);
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   const [_, setIsLoading] = React.useState(false);
 
    const validationSchema = Yup.object().shape({
       ...commonValidation,
@@ -105,6 +112,7 @@ const EditProfile = (props: Props) => {
       const updateData = {
          ...values,
          phoneNumber: `${values?.phoneNumber}`,
+         img: imageUrl,
       };
 
       const endpoint = isBloodBank
@@ -133,7 +141,7 @@ const EditProfile = (props: Props) => {
    const formik = useFormik({
       initialValues: {
          userId: currentUser?.userId,
-         img: currentUser?.img ?? url_img,
+         img: imageUrl ?? url_img,
          email: currentUser?.email,
          phoneNumber: currentUser?.phoneNumber,
          city: city?.code,
@@ -141,7 +149,7 @@ const EditProfile = (props: Props) => {
          district: district?.code,
          role: currentUser?.role,
          address: currentUser?.address,
-         birthdate: currentUser?.birthdate,
+         birthdate: formatDate(currentUser?.birthdate),
          gender: currentUser?.gender,
          fullname: currentUser?.fullname,
          cccd: currentUser?.cccd,
@@ -154,6 +162,7 @@ const EditProfile = (props: Props) => {
    });
 
    const { errors, touched, getFieldProps, setFieldValue, dirty, values } = formik;
+   console.log('🚀 ~ EditProfile ~ errors:', errors);
 
    const [listDistricts, setListDistricts] = React.useState([]);
    const [listWards, setListWards] = React.useState([]);
@@ -329,29 +338,48 @@ const EditProfile = (props: Props) => {
                      />
 
                      {isVolunteer && (
-                        <TextField
-                           id='birthdate'
-                           type='date'
-                           label='Ngày sinh'
-                           {...getFieldProps('birthdate')}
-                           InputLabelProps={{
-                              shrink: true,
-                              htmlFor: 'birthdate',
-                           }}
-                           inputProps={{
-                              ...getFieldProps('birthdate'),
-                              max: new Date().toISOString().split('T')[0],
-                           }}
-                           error={touched.birthdate && Boolean(errors.birthdate)}
-                           helperText={
-                              touched.birthdate && errors.birthdate ? (
+                        <>
+                           {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DemoItem label='Request date'>
+                                 <DatePicker
+                                    onChange={(value: Dayjs) => {
+                                       setFieldValue('birthdate', value?.toISOString());
+                                    }}
+                                    maxDate={new Date()}
+                                    {...getFieldProps('birthdate')}
+                                    value={dayjs(values?.birthdate)}
+                                 />
+                              </DemoItem>
+                              {errors.birthdate && (
                                  <Typography variant='caption' color='error'>
                                     {errors.birthdate as string}
                                  </Typography>
-                              ) : null
-                           }
-                           className='edit-profile-dialog__grid__left__dialog__input-date'
-                        />
+                              )}
+                           </LocalizationProvider> */}
+                           <TextField
+                              id='birthdate'
+                              type='date'
+                              label='Ngày sinh'
+                              {...getFieldProps('birthdate')}
+                              InputLabelProps={{
+                                 shrink: true,
+                                 htmlFor: 'birthdate',
+                              }}
+                              inputProps={{
+                                 ...getFieldProps('birthdate'),
+                                 max: new Date().toISOString().split('T')[0],
+                              }}
+                              error={touched.birthdate && Boolean(errors.birthdate)}
+                              helperText={
+                                 touched.birthdate && errors.birthdate ? (
+                                    <Typography variant='caption' color='error'>
+                                       {errors.birthdate as string}
+                                    </Typography>
+                                 ) : null
+                              }
+                              className='edit-profile-dialog__grid__left__dialog__input-date'
+                           />
+                        </>
                      )}
 
                      <Grid xs={12} mb={2} gap={1}>
@@ -364,8 +392,8 @@ const EditProfile = (props: Props) => {
                            >
                               <InputLabel htmlFor='gender'>Giới tính</InputLabel>
                               <Select id='gender' {...getFieldProps('gender')} label='Gender'>
-                                 <MenuItem value={0}>Male</MenuItem>
-                                 <MenuItem value={1}>Female</MenuItem>
+                                 <MenuItem value={0}>Name</MenuItem>
+                                 <MenuItem value={1}>Nữ</MenuItem>
                               </Select>
                               {touched.gender && errors.gender ? (
                                  <FormHelperText variant='outlined' color='error'>
@@ -485,11 +513,20 @@ const EditProfile = (props: Props) => {
                <Grid item xs={3} className='edit-profile-dialog__grid__right'>
                   <Card className='edit-profile-dialog__grid__right__card'>
                      <CardActionArea className='edit-profile-dialog__grid__right__card__action-area'>
-                        <CardMedia
-                           component='img'
-                           image={ava_default}
-                           alt='green iguana'
-                           className='edit-profile-dialog__grid__right__card__action-area__img'
+                        <Tooltip title='Click here to edit avatar' placement='top'>
+                           <CardMedia
+                              component='img'
+                              image={imageUrl ?? ava_default}
+                              alt='green iguana'
+                              className='edit-profile-dialog__grid__right__card__action-area__img'
+                           />
+                        </Tooltip>
+                        <ImageUpload
+                           selectedImage={imageUrl}
+                           setSelectedImage={setImageUrl}
+                           isOpenModalCrop={isOpenModalCrop}
+                           setLoading={setIsLoading}
+                           setIsOpenModalCrop={setIsOpenModalCrop}
                         />
                         <CardContent
                            sx={{

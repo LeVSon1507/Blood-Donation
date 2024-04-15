@@ -68,13 +68,14 @@ const Profile = (props: IPersonalProps) => {
             <Box className='box_infor_first'>
                <Box className='avt_image'>
                   <img
-                     src={ava_default}
+                     src={user?.img || ava_default}
                      width={300}
                      height={300}
                      style={{ borderRadius: '50%' }}
                      alt='avt'
                      loading='lazy'
                   />
+
                   <FiberManualRecordTwoTone className='online' />
                </Box>
                <Box className='info_user'>

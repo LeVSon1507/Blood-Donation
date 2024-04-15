@@ -1,0 +1,20 @@
+.add_image_icon-text-qa {
+   &__box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 24px;
+      &__group {
+         cursor: pointer;
+         margin: 4px;
+         padding: 16px;
+         border-radius: 20%;
+         box-shadow: 2px 3px 10px #cdd1e1;
+         &__icon {
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+         }
+      }
+   }
+}
